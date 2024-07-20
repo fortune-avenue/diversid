@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// [INFO]
 /// Constant for colors to be used in the app with following the design system
 class ColorApp {
-  static const Color black = Color(0xFF1C1C1C);
-  static const Color scaffold = Color(0xFFF8FAFB);
+  static const Color black = Color(0xFF1A1A1A);
+  static const Color scaffold = Color(0xFFF2F2F2);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color yellow = Color(0xFFFBAF42);
-  static const Color red = Color(0xFFC00000);
-  static const Color darkRed = Color.fromARGB(255, 98, 33, 33);
-  static const Color lightPink = Color.fromARGB(37, 254, 77, 151);
-  static const Color pink = Color(0xFFFE4D97);
-  static const Color lightGrey = Color(0xFFF2F4F6);
-  static const Color divider = Color(0xFFE8ECEF);
-  static const Color grey = Color(0xFF778CA2);
-  static const Color midGrey = Color(0xFFE8ECEF);
-  static const Color green = Color(0xFF6DD230);
-  static const Color blue = Color(0xFF4D7CFE);
+  static const Color red = Color(0xFFDE3333);
+  static const Color green = Color(0xFF00BA88);
+  static const Color primary = Color(0xFF06BEB6);
+  static const Color secondary = Color(0xFF48B1BF);
+  static const Gradient primaryGradient = LinearGradient(
+    colors: [primary, secondary],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  static const Color yellow = Color(0xFFFFCE47);
+  static const Color purple = Color(0xFF475BAE);
+  static const Color lightPurple = Color(0xFF9F9BC0);
+  static const Color grey = Color(0xFF999999);
+  static const Color darkGrey = Color(0xFF333333);
+
+  static List<BoxShadow> shadow = [
+    BoxShadow(
+      color: ColorApp.grey.withOpacity(0.2),
+      blurRadius: 16.r,
+      offset: const Offset(0, 4),
+    ),
+  ];
 }

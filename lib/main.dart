@@ -1,5 +1,6 @@
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 void main() async {
   /// [INFO] Init hive local db
+  await hiveInit();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -94,11 +96,11 @@ class CustomErrorWidget extends StatelessWidget {
 final _appTheme = ThemeData(
   scaffoldBackgroundColor: ColorApp.scaffold,
   colorScheme: const ColorScheme.light(
-    primary: ColorApp.red,
-    secondary: ColorApp.white,
+    primary: ColorApp.primary,
+    secondary: ColorApp.secondary,
     surface: ColorApp.scaffold,
   ),
-  fontFamily: GoogleFonts.rubik().fontFamily,
+  fontFamily: GoogleFonts.nunito().fontFamily,
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),

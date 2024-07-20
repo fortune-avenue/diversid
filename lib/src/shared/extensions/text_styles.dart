@@ -23,16 +23,16 @@ extension XTextStyle on TextStyle {
   ///
   /// Example:
   /// TypographyTheme.subtitle1.darkGrey;
+
   TextStyle get black => copyWith(color: ColorApp.black);
   TextStyle get scaffold => copyWith(color: ColorApp.scaffold);
   TextStyle get white => copyWith(color: ColorApp.white);
   TextStyle get red => copyWith(color: ColorApp.red);
-  TextStyle get lightGrey => copyWith(color: ColorApp.lightGrey);
-  TextStyle get grey => copyWith(color: ColorApp.grey);
-  TextStyle get blue => copyWith(color: ColorApp.blue);
-  TextStyle get pink => copyWith(color: ColorApp.pink);
-  TextStyle get yellow => copyWith(color: ColorApp.yellow);
   TextStyle get green => copyWith(color: ColorApp.green);
+  TextStyle get primary => copyWith(color: ColorApp.primary);
+  TextStyle get secondary => copyWith(color: ColorApp.secondary);
+  TextStyle get grey => copyWith(color: ColorApp.grey);
+  TextStyle get darkGrey => copyWith(color: ColorApp.darkGrey);
 
   /// [INFO]
   /// Extension for change font size

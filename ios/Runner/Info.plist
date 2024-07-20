@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>recognize speech</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To record voice for biometric</string>
 </dict>
 </plist>

@@ -1,3 +1,4 @@
+import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/shared/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ enum InputFormType {
   normal,
   password,
   button,
+  phoneNumber,
 }
 
 class InputFormWidget extends StatelessWidget {
@@ -39,6 +41,38 @@ class InputFormWidget extends StatelessWidget {
   })  : inputFormType = InputFormType.normal,
         isObscure = false,
         readOnly = false,
+        onTap = null,
+        onObscureTap = null;
+
+  InputFormWidget.phoneNumber({
+    super.key,
+    required this.controller,
+    this.hintText,
+    this.onChanged,
+    this.errorText,
+    this.validator,
+    this.suffix,
+    this.maxLines,
+    this.title,
+  })  : inputFormType = InputFormType.phoneNumber,
+        isObscure = false,
+        readOnly = false,
+        prefix = Padding(
+          padding: EdgeInsets.only(top: 2.h),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Gap.w8,
+              Assets.icons.indonesia.svg(),
+              Gap.w8,
+              Text(
+                '+62',
+                style: TypographyApp.text1.primary.bold,
+              ),
+            ],
+          ),
+        ),
         onTap = null,
         onObscureTap = null;
 
@@ -98,7 +132,7 @@ class InputFormWidget extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           maxLines: maxLines,
-          cursorColor: ColorApp.grey,
+          cursorColor: ColorApp.primary,
           decoration: InputDecoration(
             filled: true,
             errorText: errorText,
@@ -106,36 +140,42 @@ class InputFormWidget extends StatelessWidget {
             hintText: hintText,
             hintStyle: TypographyApp.text1.grey,
             prefixIcon: prefix,
-            suffixIcon: suffix,
+            suffixIcon: isPassword
+                ? GestureDetector(
+                    onTap: onObscureTap,
+                    child: isObscure
+                        ? const Icon(
+                            Icons.visibility_rounded,
+                            color: ColorApp.secondary,
+                          )
+                        : const Icon(
+                            Icons.visibility_off_rounded,
+                            color: ColorApp.secondary,
+                          ),
+                  )
+                : suffix,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(
-                color: ColorApp.divider,
-                width: 2,
+                color: ColorApp.primary,
+                width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(
-                color: ColorApp.grey,
+                color: ColorApp.primary,
                 width: 2,
               ),
             ),
-            suffix: isPassword
-                ? GestureDetector(
-                    onTap: onObscureTap,
-                    child: Text(
-                      isObscure ? 'SHOW' : 'HIDE',
-                      style: TypographyApp.text1.grey,
-                    ),
-                  )
-                : const SizedBox.shrink(),
           ),
           readOnly: readOnly,
           onTap: onTap,
-          style: TypographyApp.text1.black.bold,
+          style: inputFormType == InputFormType.phoneNumber
+              ? TypographyApp.text1.primary.bold
+              : TypographyApp.text1.black.bold,
         ),
       ],
     );

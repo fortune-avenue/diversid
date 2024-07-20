@@ -1,6 +1,7 @@
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/shared/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DropdownWidget extends StatelessWidget {
   final String? title;
@@ -22,24 +23,29 @@ class DropdownWidget extends StatelessWidget {
         if (title != null) ...[
           Text(
             title!,
-            style: TypographyApp.text1.black,
+            style: TypographyApp.text1.black.bold,
           ),
           Gap.h8,
         ],
         DropdownButtonFormField<String>(
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: ColorApp.primary,
+          ),
           decoration: InputDecoration(
+            isDense: true,
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(
-                color: ColorApp.divider,
-                width: 2,
+                color: ColorApp.primary,
+                width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: const BorderSide(
-                color: ColorApp.grey,
+                color: ColorApp.primary,
+                width: 2,
               ),
             ),
             filled: true,
@@ -47,7 +53,7 @@ class DropdownWidget extends StatelessWidget {
           ),
           hint: Text(
             hintText,
-            style: TypographyApp.text1.black,
+            style: TypographyApp.text1.grey,
           ),
           onChanged: (String? newValue) {},
           items: optionList.map<DropdownMenuItem<String>>((String value) {

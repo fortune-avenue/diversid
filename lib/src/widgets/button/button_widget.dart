@@ -47,8 +47,8 @@ class ButtonWidget extends StatelessWidget {
     this.sufix,
     bool? isEnabled,
   })  : buttonType = ButtonType.primary,
-        color = ColorApp.red,
-        focusColor = ColorApp.darkRed,
+        color = ColorApp.primary,
+        focusColor = ColorApp.secondary,
         _isEnabled = isEnabled ?? onTap != null;
 
   ButtonWidget.outlined({
@@ -62,7 +62,7 @@ class ButtonWidget extends StatelessWidget {
     bool? isEnabled,
   })  : buttonType = ButtonType.outlined,
         color = ColorApp.white,
-        focusColor = ColorApp.red.withOpacity(0.2),
+        focusColor = ColorApp.primary.withOpacity(0.2),
         _isEnabled = isEnabled ?? onTap != null;
 
   ButtonWidget.secondary({
@@ -75,7 +75,7 @@ class ButtonWidget extends StatelessWidget {
     this.sufix,
     bool? isEnabled,
   })  : buttonType = ButtonType.secondary,
-        color = ColorApp.lightGrey,
+        color = ColorApp.grey,
         focusColor = ColorApp.grey.withOpacity(0.2),
         _isEnabled = isEnabled ?? onTap != null;
 
@@ -90,17 +90,17 @@ class ButtonWidget extends StatelessWidget {
       child: Material(
         color: color,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(12.r),
           side: isOutlined
-              ? const BorderSide(color: ColorApp.red, width: 1)
+              ? const BorderSide(color: ColorApp.primary, width: 2)
               : BorderSide.none,
         ),
         child: InkWell(
           onTap: _isEnabled && !isLoading ? onTap : null,
           customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(12.r),
             side: isOutlined
-                ? const BorderSide(color: ColorApp.red, width: 1)
+                ? const BorderSide(color: ColorApp.primary, width: 2)
                 : BorderSide.none,
           ),
           overlayColor: WidgetStateProperty.all(focusColor),
@@ -108,7 +108,7 @@ class ButtonWidget extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: SizeApp.w28,
-              vertical: SizeApp.h8,
+              vertical: SizeApp.h12,
             ),
             child: Center(
               child: isLoading
@@ -124,7 +124,7 @@ class ButtonWidget extends StatelessWidget {
                             prefix!,
                             Gap.w8,
                             AutoSizeText(
-                              text,
+                              text.toUpperCase(),
                               style: getTextStyle(),
                               maxLines: 1,
                               minFontSize: 8,
@@ -136,7 +136,7 @@ class ButtonWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 AutoSizeText(
-                                  text,
+                                  text.toUpperCase(),
                                   style: getTextStyle(),
                                   maxLines: 1,
                                   minFontSize: 8,
@@ -146,7 +146,7 @@ class ButtonWidget extends StatelessWidget {
                               ],
                             )
                           : AutoSizeText(
-                              text,
+                              text.toUpperCase(),
                               style: getTextStyle(),
                               maxLines: 1,
                               minFontSize: 8,
@@ -161,10 +161,10 @@ class ButtonWidget extends StatelessWidget {
   TextStyle getTextStyle() {
     return _isEnabled
         ? isPrimary
-            ? TypographyApp.text1.bold.white
+            ? TypographyApp.text1.extraBlack.white
             : isOutlined
-                ? TypographyApp.text1.bold.red
-                : TypographyApp.text1.bold.grey
-        : TypographyApp.text1.bold.black;
+                ? TypographyApp.text1.extraBlack.primary
+                : TypographyApp.text1.extraBlack.grey
+        : TypographyApp.text1.extraBlack.black;
   }
 }
