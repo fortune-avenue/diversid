@@ -21,18 +21,33 @@ class Onboarding3Page extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Assets.svgs.logoPrimary.svg(),
+                    child: ExcludeSemantics(
+                      child: Assets.svgs.logoPrimary.svg(
+                        semanticsLabel: "DiversID Logo",
+                      ),
+                    ),
                   ),
                   const Spacer(flex: 1),
                   GestureDetector(
                     onTap: () => context.goNamed(Routes.register.name),
-                    child: Text('Skip >>', style: TypographyApp.text2),
+                    child: SizedBox(
+                      height: SizeApp.h48,
+                      child: Center(
+                        child: Text(
+                          'Lewati >>',
+                          style: TypographyApp.text2,
+                          semanticsLabel: 'Lewati ke Halaman Daftar',
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
               Expanded(
                 flex: 3,
-                child: Assets.svgs.onboarding3.svg(),
+                child: Assets.svgs.onboarding3.svg(
+                  semanticsLabel: 'Ilustrasi E-KYC untuk Semua',
+                ),
               ),
               Expanded(
                 child: Column(
@@ -50,18 +65,22 @@ class Onboarding3Page extends StatelessWidget {
                   ],
                 ),
               ),
-              GestureDetector(
-                onTap: () => context.goNamed(Routes.onboarding4.name),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.r),
-                    color: ColorApp.primary,
-                  ),
-                  padding: EdgeInsets.all(8.w),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: ColorApp.white,
-                    size: 40,
+              Semantics(
+                button: true,
+                label: 'Lanjut',
+                child: GestureDetector(
+                  onTap: () => context.goNamed(Routes.onboarding4.name),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.r),
+                      color: ColorApp.primary,
+                    ),
+                    padding: EdgeInsets.all(8.w),
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: ColorApp.white,
+                      size: 40,
+                    ),
                   ),
                 ),
               ),

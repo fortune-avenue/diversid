@@ -44,19 +44,23 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           Positioned(
             left: -100,
             top: -50,
-            child: Assets.svgs.eye.svg(),
+            child: ExcludeSemantics(child: Assets.svgs.eye.svg()),
           ),
           Positioned(
             bottom: 0,
             right: 0,
-            child: Assets.images.linePattern.image(
-              fit: BoxFit.fitWidth,
-              width: context.screenWidth,
+            child: ExcludeSemantics(
+              child: Assets.images.linePattern.image(
+                fit: BoxFit.fitWidth,
+                width: context.screenWidth,
+              ),
             ),
           ),
           Positioned.fill(
             child: Center(
-              child: Assets.svgs.logoWhite.svg(),
+              child: Assets.svgs.logoWhite.svg(
+                semanticsLabel: 'DiversID Logo',
+              ),
             ),
           ),
         ],

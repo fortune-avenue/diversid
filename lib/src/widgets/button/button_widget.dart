@@ -20,6 +20,7 @@ class ButtonWidget extends StatelessWidget {
   final Widget? prefix;
   final Widget? sufix;
   final Color color;
+  final String? semanticsLabel;
   final Color focusColor;
   final bool _isEnabled;
 
@@ -34,6 +35,7 @@ class ButtonWidget extends StatelessWidget {
     this.isLoading = false,
     this.prefix,
     this.sufix,
+    this.semanticsLabel,
     bool? isEnabled,
   }) : _isEnabled = isEnabled ?? onTap != null;
 
@@ -45,6 +47,7 @@ class ButtonWidget extends StatelessWidget {
     required this.text,
     this.prefix,
     this.sufix,
+    this.semanticsLabel,
     bool? isEnabled,
   })  : buttonType = ButtonType.primary,
         color = ColorApp.primary,
@@ -59,6 +62,7 @@ class ButtonWidget extends StatelessWidget {
     required this.text,
     this.prefix,
     this.sufix,
+    this.semanticsLabel,
     bool? isEnabled,
   })  : buttonType = ButtonType.outlined,
         color = ColorApp.white,
@@ -73,6 +77,7 @@ class ButtonWidget extends StatelessWidget {
     required this.text,
     this.prefix,
     this.sufix,
+    this.semanticsLabel,
     bool? isEnabled,
   })  : buttonType = ButtonType.secondary,
         color = ColorApp.grey,
@@ -85,72 +90,78 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: Material(
-        color: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          side: isOutlined
-              ? const BorderSide(color: ColorApp.primary, width: 2)
-              : BorderSide.none,
-        ),
-        child: InkWell(
-          onTap: _isEnabled && !isLoading ? onTap : null,
-          customBorder: RoundedRectangleBorder(
+    return Semantics(
+      label: 'Tombol ${semanticsLabel ?? text}',
+      button: true,
+      child: SizedBox(
+        width: width,
+        child: Material(
+          color: color,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
             side: isOutlined
                 ? const BorderSide(color: ColorApp.primary, width: 2)
                 : BorderSide.none,
           ),
-          overlayColor: WidgetStateProperty.all(focusColor),
-          focusColor: focusColor,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeApp.w28,
-              vertical: SizeApp.h12,
+          child: InkWell(
+            onTap: _isEnabled && !isLoading ? onTap : null,
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              side: isOutlined
+                  ? const BorderSide(color: ColorApp.primary, width: 2)
+                  : BorderSide.none,
             ),
-            child: Center(
-              child: isLoading
-                  ? SizedBox(
-                      height: SizeApp.customHeight(22),
-                      width: SizeApp.customHeight(22),
-                      child: const LoadingWidget(),
-                    )
-                  : prefix != null
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            prefix!,
-                            Gap.w8,
-                            AutoSizeText(
-                              text.toUpperCase(),
-                              style: getTextStyle(),
-                              maxLines: 1,
-                              minFontSize: 8,
-                            )
-                          ],
+            overlayColor: WidgetStateProperty.all(focusColor),
+            focusColor: focusColor,
+            child: ExcludeSemantics(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeApp.w28,
+                  vertical: SizeApp.h16,
+                ),
+                child: Center(
+                  child: isLoading
+                      ? SizedBox(
+                          height: SizeApp.customHeight(22),
+                          width: SizeApp.customHeight(22),
+                          child: const LoadingWidget(),
                         )
-                      : sufix != null
+                      : prefix != null
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                prefix!,
+                                Gap.w8,
                                 AutoSizeText(
                                   text.toUpperCase(),
                                   style: getTextStyle(),
                                   maxLines: 1,
                                   minFontSize: 8,
-                                ),
-                                Gap.w8,
-                                sufix!,
+                                )
                               ],
                             )
-                          : AutoSizeText(
-                              text.toUpperCase(),
-                              style: getTextStyle(),
-                              maxLines: 1,
-                              minFontSize: 8,
-                            ),
+                          : sufix != null
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    AutoSizeText(
+                                      text.toUpperCase(),
+                                      style: getTextStyle(),
+                                      maxLines: 1,
+                                      minFontSize: 8,
+                                    ),
+                                    Gap.w8,
+                                    sufix!,
+                                  ],
+                                )
+                              : AutoSizeText(
+                                  text.toUpperCase(),
+                                  style: getTextStyle(),
+                                  maxLines: 1,
+                                  minFontSize: 8,
+                                ),
+                ),
+              ),
             ),
           ),
         ),

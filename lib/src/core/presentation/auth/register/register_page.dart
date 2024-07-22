@@ -15,17 +15,19 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     HiveService hiveService = ref.read(hiveServiceProvider);
-    hiveService.isFirstInstall = false;
+    hiveService.isFirstInstall = true;
     return Scaffold(
       backgroundColor: ColorApp.scaffold,
       body: Stack(
-        children: [ 
+        children: [
           Positioned(
             right: 0,
             top: 0,
-            child: Assets.images.elipse.image(
-              height: context.screenHeightPercentage(0.4),
-              fit: BoxFit.fitHeight,
+            child: ExcludeSemantics(
+              child: Assets.images.elipse.image(
+                height: context.screenHeightPercentage(0.4),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Positioned.fill(
@@ -35,7 +37,9 @@ class RegisterPage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Assets.svgs.logoPrimary.svg(),
+                      child: Assets.svgs.logoPrimary.svg(
+                        semanticsLabel: "DiversID Logo",
+                      ),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -67,7 +71,7 @@ class RegisterPage extends ConsumerWidget {
                           Gap.h16,
                           InputFormWidget.password(
                             controller: TextEditingController(),
-                            hintText: 'Password',
+                            hintText: 'Kata Sandi',
                           ),
                           Gap.h24,
                           ButtonWidget.primary(
@@ -77,6 +81,7 @@ class RegisterPage extends ConsumerWidget {
                           Gap.h12,
                           ButtonWidget.outlined(
                             text: 'Masuk',
+                            semanticsLabel: 'Tekan untuk Masuk',
                             onTap: () {
                               context.goNamed(Routes.login.name);
                             },

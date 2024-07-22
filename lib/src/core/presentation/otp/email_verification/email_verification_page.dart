@@ -21,33 +21,38 @@ class EmailVerificationPage extends StatelessWidget {
           Positioned(
             right: 0,
             top: 0,
-            child: Assets.images.elipse.image(
-              height: context.screenHeightPercentage(0.4),
-              fit: BoxFit.fitHeight,
+            child: ExcludeSemantics(
+              child: Assets.images.elipse.image(
+                height: context.screenHeightPercentage(0.4),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Positioned.fill(
             child: SafeArea(
               child: PaddingWidget(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Gap.h16,
                     GestureDetector(
                       onTap: () {
                         context.pop();
                       },
-                      child: const Align(
+                      child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Icon(
-                          CupertinoIcons.chevron_back,
-                          color: ColorApp.black,
+                        child: SizedBox(
+                          height: SizeApp.h48,
+                          child: const Icon(
+                            CupertinoIcons.chevron_back,
+                            semanticLabel: 'Kembali',
+                            color: ColorApp.black,
+                          ),
                         ),
                       ),
                     ),
                     Gap.h20,
                     Text(
-                      'Verifikasi Nomor HP',
+                      'Verifikasi Email',
                       style: TypographyApp.headline1.black,
                     ),
                     const Spacer(),
@@ -72,31 +77,41 @@ class EmailVerificationPage extends StatelessWidget {
                             ),
                           ),
                           Gap.h24,
-                          OtpTextField(
-                            numberOfFields: 6,
-                            borderColor: ColorApp.primary,
-                            focusedBorderColor: ColorApp.primary,
-                            borderRadius: BorderRadius.circular(12.r),
-                            showFieldAsBox: true,
-                            onCodeChanged: (String code) {},
-                            onSubmit: (String verificationCode) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text("Verification Code"),
-                                      content: Text(
-                                          'Code entered is $verificationCode'),
-                                    );
-                                  });
-                            }, // end onSubmit
+                          Semantics(
+                            excludeSemantics: true,
+                            textField: true,
+                            label: 'Masukkan Kode OTP',
+                            child: OtpTextField(
+                              numberOfFields: 6,
+                              borderColor: ColorApp.primary,
+                              focusedBorderColor: ColorApp.primary,
+                              borderRadius: BorderRadius.circular(12.r),
+                              showFieldAsBox: true,
+                              onCodeChanged: (String code) {},
+                              onSubmit: (String verificationCode) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Verification Code"),
+                                        content: Text(
+                                            'Code entered is $verificationCode'),
+                                      );
+                                    });
+                              }, // end onSubmit
+                            ),
                           ),
                           Gap.h16,
                           GestureDetector(
                             onTap: () {},
-                            child: Text(
-                              'Kirim Ulang OTP',
-                              style: TypographyApp.text2.secondary,
+                            child: SizedBox(
+                              height: SizeApp.h48,
+                              child: Center(
+                                child: Text(
+                                  'Kirim Ulang OTP',
+                                  style: TypographyApp.text2.secondary,
+                                ),
+                              ),
                             ),
                           ),
                           Gap.h24,
@@ -104,7 +119,7 @@ class EmailVerificationPage extends StatelessWidget {
                             text: 'LANJUT',
                             onTap: () {
                               context.pushNamed(
-                                Routes.resultPhoneNumberVerification.name,
+                                Routes.resultEmailVerification.name,
                               );
                             },
                           ),

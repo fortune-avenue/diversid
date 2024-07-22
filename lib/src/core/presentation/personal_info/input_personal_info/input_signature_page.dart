@@ -39,27 +39,32 @@ class _InputSignaturePageState extends State<InputSignaturePage> {
           Positioned(
             right: 0,
             top: 0,
-            child: Assets.images.elipse.image(
-              height: context.screenHeightPercentage(0.4),
-              fit: BoxFit.fitHeight,
+            child: ExcludeSemantics(
+              child: Assets.images.elipse.image(
+                height: context.screenHeightPercentage(0.4),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Positioned.fill(
             child: SafeArea(
               child: PaddingWidget(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Gap.h16,
                     GestureDetector(
                       onTap: () {
                         context.pop();
                       },
-                      child: const Align(
+                      child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Icon(
-                          CupertinoIcons.chevron_back,
-                          color: ColorApp.black,
+                        child: SizedBox(
+                          height: SizeApp.h48,
+                          child: const Icon(
+                            CupertinoIcons.chevron_back,
+                            semanticLabel: 'Kembali',
+                            color: ColorApp.black,
+                          ),
                         ),
                       ),
                     ),
@@ -92,10 +97,14 @@ class _InputSignaturePageState extends State<InputSignaturePage> {
                               top: 16,
                               child: GestureDetector(
                                 onTap: () => _controller.clear(),
-                                child: Text(
-                                  'Ulangi',
-                                  style: TypographyApp.text2.primary.bold,
-                                  textAlign: TextAlign.end,
+                                child: SizedBox(
+                                  height: SizeApp.h48,
+                                  width: SizeApp.h48,
+                                  child: Text(
+                                    'Ulangi',
+                                    style: TypographyApp.text2.primary.bold,
+                                    textAlign: TextAlign.end,
+                                  ),
                                 ),
                               ),
                             ),
@@ -110,6 +119,7 @@ class _InputSignaturePageState extends State<InputSignaturePage> {
                         context.pushNamed(Routes.resultPersonalInfo.name);
                       },
                     ),
+                    Gap.h24,
                   ],
                 ),
               ),

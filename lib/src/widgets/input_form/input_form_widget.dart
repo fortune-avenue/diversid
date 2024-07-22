@@ -125,57 +125,64 @@ class InputFormWidget extends StatelessWidget {
           ),
           Gap.h8,
         ],
-        TextFormField(
-          controller: controller,
-          onChanged: onChanged,
-          obscureText: isObscure,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: validator,
-          maxLines: maxLines,
-          cursorColor: ColorApp.primary,
-          decoration: InputDecoration(
-            filled: true,
-            errorText: errorText,
-            fillColor: ColorApp.white,
-            hintText: hintText,
-            hintStyle: TypographyApp.text1.grey,
-            prefixIcon: prefix,
-            suffixIcon: isPassword
-                ? GestureDetector(
-                    onTap: onObscureTap,
-                    child: isObscure
-                        ? const Icon(
-                            Icons.visibility_rounded,
-                            color: ColorApp.secondary,
-                          )
-                        : const Icon(
-                            Icons.visibility_off_rounded,
-                            color: ColorApp.secondary,
-                          ),
-                  )
-                : suffix,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(
-                color: ColorApp.primary,
-                width: 1,
+        Semantics(
+          label: 'Masukkan $hintText',
+          textField: true,
+          excludeSemantics: true,
+          child: TextFormField(
+            controller: controller,
+            onChanged: onChanged,
+            obscureText: isObscure,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: validator,
+            maxLines: maxLines,
+            cursorColor: ColorApp.primary,
+            decoration: InputDecoration(
+              filled: true,
+              errorText: errorText,
+              fillColor: ColorApp.white,
+              hintText: hintText,
+              hintStyle: TypographyApp.text1.grey,
+              prefixIcon: prefix,
+              suffixIcon: isPassword
+                  ? GestureDetector(
+                      onTap: onObscureTap,
+                      child: isObscure
+                          ? const Icon(
+                              Icons.visibility_rounded,
+                              semanticLabel: 'Tunjukan Kata Sandi',
+                              color: ColorApp.secondary,
+                            )
+                          : const Icon(
+                              Icons.visibility_off_rounded,
+                              semanticLabel: 'Sembunyikan Kata Sandi',
+                              color: ColorApp.secondary,
+                            ),
+                    )
+                  : suffix,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: const BorderSide(
+                  color: ColorApp.primary,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: const BorderSide(
+                  color: ColorApp.primary,
+                  width: 2,
+                ),
               ),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(
-                color: ColorApp.primary,
-                width: 2,
-              ),
-            ),
+            readOnly: readOnly,
+            onTap: onTap,
+            style: inputFormType == InputFormType.phoneNumber
+                ? TypographyApp.text1.primary.bold
+                : TypographyApp.text1.black.bold,
           ),
-          readOnly: readOnly,
-          onTap: onTap,
-          style: inputFormType == InputFormType.phoneNumber
-              ? TypographyApp.text1.primary.bold
-              : TypographyApp.text1.black.bold,
         ),
       ],
     );

@@ -31,9 +31,11 @@ class DashboardPage extends StatelessWidget {
           Positioned(
             right: 0,
             top: 0,
-            child: Assets.images.elipse.image(
-              height: context.screenHeightPercentage(0.4),
-              fit: BoxFit.fitHeight,
+            child: ExcludeSemantics(
+              child: Assets.images.elipse.image(
+                height: context.screenHeightPercentage(0.4),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Positioned.fill(
@@ -47,106 +49,131 @@ class DashboardPage extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 3,
-                          child: Assets.svgs.logoPrimary.svg(),
-                        ),
-                        const Spacer(flex: 1),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.r),
-                            color: ColorApp.primary,
+                          child: Assets.svgs.logoPrimary.svg(
+                            semanticsLabel: "DiversID Logo",
                           ),
-                          padding: EdgeInsets.all(SizeApp.w4),
-                          child: const Icon(
-                            CupertinoIcons.bell,
-                            color: ColorApp.white,
-                          ),
-                        ),
-                        Gap.w16,
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.r),
-                            color: ColorApp.primary,
-                          ),
-                          padding: EdgeInsets.all(SizeApp.w4),
-                          height: SizeApp.h40,
-                          width: SizeApp.h40,
                         ),
                       ],
                     ),
                     Gap.h64,
-                    MenuDashboardWidget(
-                      title: "Informasi Pribadi",
-                      svg: Assets.icons.personalInformation,
-                      status: MenuDashboardStatus.verified,
-                      onTap: () {
-                        context.goNamed(Routes.inputPersonalInfo1.name);
-                      },
+                    Semantics(
+                      button: true,
+                      label: 'Menu Informasi Pribadi Terisi',
+                      // label: 'Informasi Pribadi Wajib Di-isi',
+                      // label: 'Informasi Pribadi Menunggu Verifikasi',
+                      // label: 'Informasi Pribadi Perlu Diperbarui',
+                      // label: 'Informasi Pribadi Ditolak',
+                      // label: 'Informasi Pribadi Opsional',
+                      child: MenuDashboardWidget(
+                        title: "Informasi Pribadi",
+                        svg: Assets.icons.personalInformation,
+                        status: MenuDashboardStatus.verified,
+                        onTap: () {
+                          context.goNamed(Routes.inputPersonalInfo1.name);
+                        },
+                      ),
                     ),
                     Gap.h8,
-                    MenuDashboardWidget(
-                      title: "Verifikasi KTP",
-                      svg: Assets.icons.ktpVerification,
-                      status: MenuDashboardStatus.waiting,
+                    Semantics(
+                      button: true,
+                      label:
+                          'Menu Verifikasi KTP Dengan Status Menunggu Verifikasi',
+                      child: MenuDashboardWidget(
+                        title: "Verifikasi KTP",
+                        svg: Assets.icons.ktpVerification,
+                        status: MenuDashboardStatus.waiting,
+                        onTap: () {},
+                      ),
                     ),
                     Gap.h8,
-                    MenuDashboardWidget(
-                      title: "Verifikasi Email & Nomor HP",
-                      svg: Assets.icons.otp,
-                      status: MenuDashboardStatus.required,
-                      onTap: () =>
-                          context.goNamed(Routes.inputPhoneNumber.name),
+                    Semantics(
+                      button: true,
+                      label: 'Menu Verifikasi Email & Nomor HP Wajib Di-isi',
+                      child: MenuDashboardWidget(
+                        title: "Verifikasi Email & Nomor HP",
+                        svg: Assets.icons.otp,
+                        status: MenuDashboardStatus.required,
+                        onTap: () =>
+                            context.goNamed(Routes.inputPhoneNumber.name),
+                      ),
                     ),
                     Gap.h8,
-                    MenuDashboardWidget(
-                      title: "Verifikasi Alamat",
-                      svg: Assets.icons.address,
-                      status: MenuDashboardStatus.optional,
-                      onTap: () {
-                        context.goNamed(Routes.inputAddress.name);
-                      },
+                    Semantics(
+                      button: true,
+                      label: 'Menu Verifikasi Alamat Opsional',
+                      child: MenuDashboardWidget(
+                        title: "Verifikasi Alamat",
+                        svg: Assets.icons.address,
+                        status: MenuDashboardStatus.optional,
+                        onTap: () {
+                          context.goNamed(Routes.inputAddress.name);
+                        },
+                      ),
                     ),
                     Gap.h8,
-                    MenuDashboardWidget(
-                      title: "Voice Biometric",
-                      svg: Assets.icons.voiceBiometric,
-                      status: MenuDashboardStatus.rejected,
+                    Semantics(
+                      button: true,
+                      label:
+                          'Menu Verifikasi Biometrik Wajib Dengan Status Ditolak',
+                      child: MenuDashboardWidget(
+                        title: "Voice Biometric",
+                        svg: Assets.icons.voiceBiometric,
+                        status: MenuDashboardStatus.rejected,
+                        onTap: () {},
+                      ),
                     ),
                     Gap.h8,
-                    MenuDashboardWidget(
-                      title: "Informasi Tambahan",
-                      svg: Assets.icons.additionalInfo,
-                      onTap: () {
-                        context.goNamed(Routes.inputAdditionalInfo.name);
-                      },
-                      status: MenuDashboardStatus.needsUpdate,
+                    Semantics(
+                      button: true,
+                      label:
+                          'Menu Informasi Tambahan Dengan Status Perlu Diperbarui',
+                      child: MenuDashboardWidget(
+                        title: "Informasi Tambahan",
+                        svg: Assets.icons.additionalInfo,
+                        onTap: () {
+                          context.goNamed(Routes.inputAdditionalInfo.name);
+                        },
+                        status: MenuDashboardStatus.needsUpdate,
+                      ),
                     ),
                     Gap.h8,
                     Expanded(
                       child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const FlutterTTSPage(),
-                            //   ),
-                            // );
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const MyHomePage(),
-                            //   ),
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RecorderPage(),
+                        child: Semantics(
+                          button: true,
+                          label: 'Tekan untuk memberikan Masukan',
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const FlutterTTSPage(),
+                              //   ),
+                              // );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const MyHomePage(),
+                              //   ),
+                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RecorderPage(),
+                                ),
+                              );
+                            },
+                            child: ExcludeSemantics(
+                              child: SizedBox(
+                                height: SizeApp.h48,
+                                child: Center(
+                                  child: Text(
+                                    'Ada Masukan? Hubungi Kami',
+                                    style: TypographyApp.text1.bold.primary,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          child: Text(
-                            'Ada Feedback? Hubungi Kami',
-                            style: TypographyApp.text1.bold.primary,
+                            ),
                           ),
                         ),
                       ),
@@ -291,43 +318,45 @@ class MenuDashboardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          color: ColorApp.white,
-          boxShadow: ColorApp.shadow,
-        ),
-        padding: EdgeInsets.all(SizeApp.w16),
-        child: Row(
-          children: [
-            svg.svg(width: 40, color: ColorApp.primary),
-            Gap.w16,
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TypographyApp.text1.bold.black,
-                ),
-                Text(
-                  statusText,
-                  style: TypographyApp.subText1.copyWith(
-                    color: statusTextColor,
+      child: ExcludeSemantics(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            color: ColorApp.white,
+            boxShadow: ColorApp.shadow,
+          ),
+          padding: EdgeInsets.all(SizeApp.w16),
+          child: Row(
+            children: [
+              svg.svg(width: 40, color: ColorApp.primary),
+              Gap.w16,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TypographyApp.text1.bold.black,
                   ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100.r),
-                color: iconColor,
+                  Text(
+                    statusText,
+                    style: TypographyApp.subText1.copyWith(
+                      color: statusTextColor,
+                    ),
+                  ),
+                ],
               ),
-              padding: EdgeInsets.all(SizeApp.w4),
-              child: icon,
-            ),
-          ],
+              const Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.r),
+                  color: iconColor,
+                ),
+                padding: EdgeInsets.all(SizeApp.w4),
+                child: icon,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -345,11 +374,6 @@ enum TtsState { playing, stopped, paused, continued }
 
 class _FlutterTTSPageState extends State<FlutterTTSPage> {
   late FlutterTts flutterTts;
-  String? language;
-  String? engine;
-  double volume = 0.5;
-  double pitch = 1.0;
-  double rate = 0.5;
   bool isCurrentLanguageInstalled = false;
 
   String? _newVoiceText;
@@ -362,10 +386,7 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
   bool get isPaused => ttsState == TtsState.paused;
   bool get isContinued => ttsState == TtsState.continued;
 
-  bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
-  bool get isWindows => !kIsWeb && Platform.isWindows;
-  bool get isWeb => kIsWeb;
 
   @override
   initState() {
@@ -373,7 +394,7 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
     initTts();
   }
 
-  dynamic initTts() {
+  void initTts() async {
     flutterTts = FlutterTts();
 
     _setAwaitOptions();
@@ -385,70 +406,56 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
 
     flutterTts.setStartHandler(() {
       setState(() {
-        print("Playing");
         ttsState = TtsState.playing;
       });
     });
 
     flutterTts.setCompletionHandler(() {
       setState(() {
-        print("Complete");
         ttsState = TtsState.stopped;
       });
     });
 
     flutterTts.setCancelHandler(() {
       setState(() {
-        print("Cancel");
         ttsState = TtsState.stopped;
       });
     });
 
     flutterTts.setPauseHandler(() {
       setState(() {
-        print("Paused");
         ttsState = TtsState.paused;
       });
     });
 
     flutterTts.setContinueHandler(() {
       setState(() {
-        print("Continued");
         ttsState = TtsState.continued;
       });
     });
 
     flutterTts.setErrorHandler((msg) {
       setState(() {
-        print("error: $msg");
         ttsState = TtsState.stopped;
       });
     });
-  }
 
-  Future<dynamic> _getLanguages() async => await flutterTts.getLanguages;
-
-  Future<dynamic> _getEngines() async => await flutterTts.getEngines;
-
-  Future<void> _getDefaultEngine() async {
-    var engine = await flutterTts.getDefaultEngine;
-    if (engine != null) {
-      print(engine);
+    await flutterTts.setVolume(1);
+    await flutterTts.setSpeechRate(1);
+    await flutterTts.setPitch(0.5);
+    await flutterTts.setLanguage('id-ID');
+    if (isAndroid) {
+      flutterTts
+          .isLanguageInstalled('id-ID')
+          .then((value) => isCurrentLanguageInstalled = (value as bool));
     }
   }
 
-  Future<void> _getDefaultVoice() async {
-    var voice = await flutterTts.getDefaultVoice;
-    if (voice != null) {
-      print(voice);
-    }
-  }
+  Future<void> _getDefaultEngine() => flutterTts.getDefaultEngine;
+
+  Future<void> _getDefaultVoice() => flutterTts.getDefaultVoice;
 
   Future<void> _speak() async {
-    await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
-
     if (_newVoiceText != null) {
       if (_newVoiceText!.isNotEmpty) {
         await flutterTts.speak(_newVoiceText!);
@@ -486,36 +493,6 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
     return items;
   }
 
-  void changedEnginesDropDownItem(String? selectedEngine) async {
-    await flutterTts.setEngine(selectedEngine!);
-    language = null;
-    setState(() {
-      engine = selectedEngine;
-    });
-  }
-
-  List<DropdownMenuItem<String>> getLanguageDropDownMenuItems(
-      List<dynamic> languages) {
-    var items = <DropdownMenuItem<String>>[];
-    for (dynamic type in languages) {
-      items.add(DropdownMenuItem(
-          value: type as String?, child: Text((type as String))));
-    }
-    return items;
-  }
-
-  void changedLanguageDropDownItem(String? selectedType) {
-    setState(() {
-      language = selectedType;
-      flutterTts.setLanguage(language!);
-      if (isAndroid) {
-        flutterTts
-            .isLanguageInstalled(language!)
-            .then((value) => isCurrentLanguageInstalled = (value as bool));
-      }
-    });
-  }
-
   void _onChange(String text) {
     setState(() {
       _newVoiceText = text;
@@ -535,9 +512,6 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
             children: [
               _inputSection(),
               _btnSection(),
-              _engineSection(),
-              _futureBuilder(),
-              _buildSliders(),
               if (isAndroid) _getMaxSpeechInputLengthSection(),
             ],
           ),
@@ -545,34 +519,6 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
       ),
     );
   }
-
-  Widget _engineSection() {
-    if (isAndroid) {
-      return FutureBuilder<dynamic>(
-          future: _getEngines(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData) {
-              return _enginesDropDownSection(snapshot.data as List<dynamic>);
-            } else if (snapshot.hasError) {
-              return const Text('Error loading engines...');
-            } else
-              return const Text('Loading engines...');
-          });
-    } else {
-      return const SizedBox(width: 0, height: 0);
-    }
-  }
-
-  Widget _futureBuilder() => FutureBuilder<dynamic>(
-      future: _getLanguages(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _languageDropDownSection(snapshot.data as List<dynamic>);
-        } else if (snapshot.hasError) {
-          return const Text('Error loading languages...');
-        } else
-          return const Text('Loading Languages...');
-      });
 
   Widget _inputSection() => Container(
       alignment: Alignment.topCenter,
@@ -601,29 +547,6 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
       ),
     );
   }
-
-  Widget _enginesDropDownSection(List<dynamic> engines) => Container(
-        padding: const EdgeInsets.only(top: 50.0),
-        child: DropdownButton(
-          value: engine,
-          items: getEnginesDropDownMenuItems(engines),
-          onChanged: changedEnginesDropDownItem,
-        ),
-      );
-
-  Widget _languageDropDownSection(List<dynamic> languages) => Container(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        DropdownButton(
-          value: language,
-          items: getLanguageDropDownMenuItems(languages),
-          onChanged: changedLanguageDropDownItem,
-        ),
-        Visibility(
-          visible: isAndroid,
-          child: Text("Is installed: $isCurrentLanguageInstalled"),
-        ),
-      ]));
 
   Column _buildButtonColumn(Color color, Color splashColor, IconData icon,
       String label, Function func) {
@@ -659,52 +582,6 @@ class _FlutterTTSPageState extends State<FlutterTTSPage> {
         ),
         Text("$_inputLength characters"),
       ],
-    );
-  }
-
-  Widget _buildSliders() {
-    return Column(
-      children: [_volume(), _pitch(), _rate()],
-    );
-  }
-
-  Widget _volume() {
-    return Slider(
-        value: volume,
-        onChanged: (newVolume) {
-          setState(() => volume = newVolume);
-        },
-        min: 0.0,
-        max: 1.0,
-        divisions: 10,
-        label: "Volume: $volume");
-  }
-
-  Widget _pitch() {
-    return Slider(
-      value: pitch,
-      onChanged: (newPitch) {
-        setState(() => pitch = newPitch);
-      },
-      min: 0.5,
-      max: 2.0,
-      divisions: 15,
-      label: "Pitch: $pitch",
-      activeColor: Colors.red,
-    );
-  }
-
-  Widget _rate() {
-    return Slider(
-      value: rate,
-      onChanged: (newRate) {
-        setState(() => rate = newRate);
-      },
-      min: 0.0,
-      max: 1.0,
-      divisions: 10,
-      label: "Rate: $rate",
-      activeColor: Colors.green,
     );
   }
 }

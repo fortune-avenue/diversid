@@ -19,9 +19,11 @@ class LoginPage extends StatelessWidget {
           Positioned(
             right: 0,
             top: 0,
-            child: Assets.images.elipse.image(
-              height: context.screenHeightPercentage(0.4),
-              fit: BoxFit.fitHeight,
+            child: ExcludeSemantics(
+              child: Assets.images.elipse.image(
+                height: context.screenHeightPercentage(0.4),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Positioned.fill(
@@ -30,7 +32,10 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child: Assets.svgs.logoPrimary.svg()),
+                    Expanded(
+                        child: Assets.svgs.logoPrimary.svg(
+                      semanticsLabel: "DiversID Logo",
+                    )),
                     Container(
                       decoration: BoxDecoration(
                         color: ColorApp.white,
@@ -56,7 +61,7 @@ class LoginPage extends StatelessWidget {
                           Gap.h16,
                           InputFormWidget.password(
                             controller: TextEditingController(),
-                            hintText: 'Password',
+                            hintText: 'Kata Sandi',
                           ),
                           Gap.h24,
                           ButtonWidget.primary(
