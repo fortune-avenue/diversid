@@ -2,12 +2,27 @@ import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/constants/themes/themes.dart';
 import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class Onboarding1Page extends StatelessWidget {
+class Onboarding1Page extends ConsumerStatefulWidget {
   const Onboarding1Page({super.key});
+
+  @override
+  ConsumerState<Onboarding1Page> createState() => _Onboarding1PageState();
+}
+
+class _Onboarding1PageState extends ConsumerState<Onboarding1Page> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  @override
+  void initState() {
+    ttsService.speak('Selamat datang di DiversID. E-KYC Ramah Tuna Netra');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

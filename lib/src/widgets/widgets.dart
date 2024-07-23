@@ -4,4 +4,5 @@ export 'dropdown/dropdown_widget.dart';
 export 'input_form/input_form_widget.dart';
 export 'loading/loading_widget.dart';
 export 'padding/padding_widget.dart';
+export 'padding/custom_scroll_widget.dart';
 export 'socmed_widget.dart';

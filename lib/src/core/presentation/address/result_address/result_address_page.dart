@@ -40,10 +40,14 @@ class ResultAddressPage extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: SizedBox(
                           height: SizeApp.h48,
-                          child: const Icon(
-                            CupertinoIcons.chevron_back,
-                            semanticLabel: 'Kembali',
-                            color: ColorApp.black,
+                          width: SizeApp.h48,
+                          child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(
+                              CupertinoIcons.chevron_back,
+                              semanticLabel: 'Kembali',
+                              color: ColorApp.black,
+                            ),
                           ),
                         ),
                       ),

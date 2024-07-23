@@ -16,86 +16,89 @@ class RegisterPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     HiveService hiveService = ref.read(hiveServiceProvider);
     hiveService.isFirstInstall = true;
+    
     return Scaffold(
       backgroundColor: ColorApp.scaffold,
-      body: Stack(
-        children: [
-          Positioned(
-            right: 0,
-            top: 0,
-            child: ExcludeSemantics(
-              child: Assets.images.elipse.image(
-                height: context.screenHeightPercentage(0.4),
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: SafeArea(
-              child: PaddingWidget(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Assets.svgs.logoPrimary.svg(
-                        semanticsLabel: "DiversID Logo",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: ColorApp.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        boxShadow: ColorApp.shadow,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeApp.w16,
-                        vertical: SizeApp.h32,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Daftar',
-                            style: TypographyApp.headline3.black,
-                          ),
-                          Gap.h16,
-                          InputFormWidget(
-                            controller: TextEditingController(),
-                            hintText: 'Nama Lengkap',
-                          ),
-                          Gap.h16,
-                          InputFormWidget(
-                            controller: TextEditingController(),
-                            hintText: 'Email',
-                          ),
-                          Gap.h16,
-                          InputFormWidget.password(
-                            controller: TextEditingController(),
-                            hintText: 'Kata Sandi',
-                          ),
-                          Gap.h24,
-                          ButtonWidget.primary(
-                            text: 'Daftar',
-                            onTap: () {},
-                          ),
-                          Gap.h12,
-                          ButtonWidget.outlined(
-                            text: 'Masuk',
-                            semanticsLabel: 'Tekan untuk Masuk',
-                            onTap: () {
-                              context.goNamed(Routes.login.name);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer()
-                  ],
+      body: CustomScrollWidget(
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              top: 0,
+              child: ExcludeSemantics(
+                child: Assets.images.elipse.image(
+                  height: context.screenHeightPercentage(0.4),
+                  fit: BoxFit.fitHeight,
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned.fill(
+              child: SafeArea(
+                child: PaddingWidget(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Assets.svgs.logoPrimary.svg(
+                          semanticsLabel: "DiversID Logo",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: ColorApp.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: ColorApp.shadow,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeApp.w16,
+                          vertical: SizeApp.h32,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Daftar',
+                              style: TypographyApp.headline3.black,
+                            ),
+                            Gap.h16,
+                            InputFormWidget(
+                              controller: TextEditingController(),
+                              hintText: 'Nama Lengkap',
+                            ),
+                            Gap.h16,
+                            InputFormWidget(
+                              controller: TextEditingController(),
+                              hintText: 'Email',
+                            ),
+                            Gap.h16,
+                            InputFormWidget.password(
+                              controller: TextEditingController(),
+                              hintText: 'Kata Sandi',
+                            ),
+                            Gap.h24,
+                            ButtonWidget.primary(
+                              text: 'Daftar',
+                              onTap: () {},
+                            ),
+                            Gap.h12,
+                            ButtonWidget.outlined(
+                              text: 'Masuk',
+                              semanticsLabel: 'Tekan untuk Masuk',
+                              onTap: () {
+                                context.goNamed(Routes.login.name);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer()
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

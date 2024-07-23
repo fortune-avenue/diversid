@@ -23,6 +23,7 @@ class ButtonWidget extends StatelessWidget {
   final String? semanticsLabel;
   final Color focusColor;
   final bool _isEnabled;
+  final bool isStickyButton;
 
   const ButtonWidget({
     super.key,
@@ -37,6 +38,7 @@ class ButtonWidget extends StatelessWidget {
     this.sufix,
     this.semanticsLabel,
     bool? isEnabled,
+    this.isStickyButton = false,
   }) : _isEnabled = isEnabled ?? onTap != null;
 
   const ButtonWidget.primary({
@@ -49,6 +51,7 @@ class ButtonWidget extends StatelessWidget {
     this.sufix,
     this.semanticsLabel,
     bool? isEnabled,
+    this.isStickyButton = false,
   })  : buttonType = ButtonType.primary,
         color = ColorApp.primary,
         focusColor = ColorApp.secondary,
@@ -64,6 +67,7 @@ class ButtonWidget extends StatelessWidget {
     this.sufix,
     this.semanticsLabel,
     bool? isEnabled,
+    this.isStickyButton = false,
   })  : buttonType = ButtonType.outlined,
         color = ColorApp.white,
         focusColor = ColorApp.primary.withOpacity(0.2),
@@ -78,6 +82,7 @@ class ButtonWidget extends StatelessWidget {
     this.prefix,
     this.sufix,
     this.semanticsLabel,
+    this.isStickyButton = false,
     bool? isEnabled,
   })  : buttonType = ButtonType.secondary,
         color = ColorApp.grey,
@@ -98,7 +103,12 @@ class ButtonWidget extends StatelessWidget {
         child: Material(
           color: color,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: isStickyButton
+                ? BorderRadius.vertical(
+                    top: Radius.circular(12.r),
+                    bottom: Radius.zero,
+                  )
+                : BorderRadius.circular(12.r),
             side: isOutlined
                 ? const BorderSide(color: ColorApp.primary, width: 2)
                 : BorderSide.none,
@@ -106,7 +116,12 @@ class ButtonWidget extends StatelessWidget {
           child: InkWell(
             onTap: _isEnabled && !isLoading ? onTap : null,
             customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: isStickyButton
+                  ? BorderRadius.vertical(
+                      top: Radius.circular(12.r),
+                      bottom: Radius.zero,
+                    )
+                  : BorderRadius.circular(12.r),
               side: isOutlined
                   ? const BorderSide(color: ColorApp.primary, width: 2)
                   : BorderSide.none,

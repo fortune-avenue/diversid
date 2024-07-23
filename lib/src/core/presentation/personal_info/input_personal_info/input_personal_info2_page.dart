@@ -15,95 +15,103 @@ class InputPersonalInfo2Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorApp.scaffold,
-      body: Stack(
-        children: [
-          Positioned(
-            right: 0,
-            top: 0,
-            child: ExcludeSemantics(
-              child: Assets.images.elipse.image(
-                height: context.screenHeightPercentage(0.4),
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: SafeArea(
-              child: PaddingWidget(
-                child: Column(
-                  children: [
-                    Gap.h16,
-                    GestureDetector(
-                      onTap: () {
-                        context.pop();
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: SizedBox(
-                          height: SizeApp.h48,
-                          child: const Icon(
-                            CupertinoIcons.chevron_back,
-                            semanticLabel: 'Kembali',
-                            color: ColorApp.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Gap.h20,
-                    Text(
-                      'Informasi pribadi',
-                      style: TypographyApp.headline1.black,
-                    ),
-                    Gap.h32,
-                    Container(
-                      decoration: BoxDecoration(
-                        color: ColorApp.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        boxShadow: ColorApp.shadow,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeApp.w16,
-                        vertical: SizeApp.h32,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const DropdownWidget(
-                            hintText: 'Jenis Kelamin',
-                            optionList: [
-                              'Jenis Kelamin',
-                            ],
-                          ),
-                          Gap.h16,
-                          const DropdownWidget(
-                            hintText: 'Agama',
-                            optionList: [
-                              'Agama',
-                            ],
-                          ),
-                          Gap.h16,
-                          const DropdownWidget(
-                            hintText: 'Status Perkawinan',
-                            optionList: [
-                              'Tingkat Pendidikan',
-                            ],
-                          ),
-                          Gap.h24,
-                          ButtonWidget.primary(
-                            text: 'LANJUT',
-                            onTap: () {
-                              context.pushNamed(Routes.inputPersonalInfo3.name);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+      body: CustomScrollWidget(
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              top: 0,
+              child: ExcludeSemantics(
+                child: Assets.images.elipse.image(
+                  height: context.screenHeightPercentage(0.4),
+                  fit: BoxFit.fitHeight,
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned.fill(
+              child: SafeArea(
+                child: PaddingWidget(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Gap.h16,
+                      GestureDetector(
+                        onTap: () {
+                          context.pop();
+                        },
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            height: SizeApp.h48,
+                            width: SizeApp.h48,
+                            child: const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Icon(
+                                CupertinoIcons.chevron_back,
+                                semanticLabel: 'Kembali',
+                                color: ColorApp.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Gap.h20,
+                      Text(
+                        'Informasi pribadi',
+                        style: TypographyApp.headline1.black,
+                      ),
+                      Gap.h32,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: ColorApp.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: ColorApp.shadow,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeApp.w16,
+                          vertical: SizeApp.h32,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const DropdownWidget(
+                              hintText: 'Jenis Kelamin',
+                              optionList: [
+                                'Jenis Kelamin',
+                              ],
+                            ),
+                            Gap.h16,
+                            const DropdownWidget(
+                              hintText: 'Agama',
+                              optionList: [
+                                'Agama',
+                              ],
+                            ),
+                            Gap.h16,
+                            const DropdownWidget(
+                              hintText: 'Status Perkawinan',
+                              optionList: [
+                                'Tingkat Pendidikan',
+                              ],
+                            ),
+                            Gap.h24,
+                            ButtonWidget.primary(
+                              text: 'LANJUT',
+                              onTap: () {
+                                context
+                                    .pushNamed(Routes.inputPersonalInfo3.name);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

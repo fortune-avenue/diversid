@@ -36,6 +36,7 @@ dependencies:
   accessibility_tools: ^2.2.1
   flutter_localizations:
     sdk: flutter
+  flutter_keyboard_visibility: ^6.0.0
 
 
 dev_dependencies:

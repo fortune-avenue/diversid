@@ -26,6 +26,7 @@ class InputFormWidget extends StatelessWidget {
   final Widget? suffix;
   final int? maxLines;
   final String? title;
+  final FocusNode? focusNode;
 
   const InputFormWidget({
     super.key,
@@ -36,8 +37,9 @@ class InputFormWidget extends StatelessWidget {
     this.validator,
     this.prefix,
     this.suffix,
-    this.maxLines,
+    this.maxLines = 1,
     this.title,
+    this.focusNode,
   })  : inputFormType = InputFormType.normal,
         isObscure = false,
         readOnly = false,
@@ -52,11 +54,12 @@ class InputFormWidget extends StatelessWidget {
     this.errorText,
     this.validator,
     this.suffix,
-    this.maxLines,
     this.title,
+    this.focusNode,
   })  : inputFormType = InputFormType.phoneNumber,
         isObscure = false,
         readOnly = false,
+        maxLines = 1,
         prefix = Padding(
           padding: EdgeInsets.only(top: 2.h),
           child: Row(
@@ -85,8 +88,9 @@ class InputFormWidget extends StatelessWidget {
     this.validator,
     this.prefix,
     this.suffix,
-    this.maxLines,
+    this.maxLines = 1,
     this.title,
+    this.focusNode,
   })  : inputFormType = InputFormType.button,
         isObscure = false,
         readOnly = true,
@@ -106,6 +110,7 @@ class InputFormWidget extends StatelessWidget {
     this.suffix,
     this.maxLines = 1,
     this.title,
+    this.focusNode,
   })  : inputFormType = InputFormType.password,
         readOnly = false,
         onTap = null;
@@ -130,6 +135,7 @@ class InputFormWidget extends StatelessWidget {
           textField: true,
           excludeSemantics: true,
           child: TextFormField(
+            focusNode: focusNode,
             controller: controller,
             onChanged: onChanged,
             obscureText: isObscure,
