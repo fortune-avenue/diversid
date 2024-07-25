@@ -62,7 +62,8 @@ class MyApp extends ConsumerWidget {
                 ErrorWidget.builder = (details) {
                   return CustomErrorWidget(errorDetails: details);
                 };
-                return AccessibilityTools(child: child ?? const Scaffold());
+                // return AccessibilityTools(child: child ?? const Scaffold());
+                return child ?? const Scaffold();
               },
             ),
           );

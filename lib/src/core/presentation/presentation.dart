@@ -54,3 +54,7 @@ export 'otp/input_email/input_email_page.dart';
 export 'otp/email_verification/email_verification_page.dart';
 /// result email verification
 export 'otp/result_email_verification/result_email_verification_page.dart';
+
+//* VOICE
+/// input voice
+export 'voice/input_voice_page.dart';

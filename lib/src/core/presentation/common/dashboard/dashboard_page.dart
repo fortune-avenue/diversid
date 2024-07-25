@@ -134,7 +134,9 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                         title: "Voice Biometric",
                         svg: Assets.icons.voiceBiometric,
                         status: MenuDashboardStatus.rejected,
-                        onTap: () {},
+                        onTap: () {
+                          context.goNamed(Routes.inputVoice.name);
+                        },
                       ),
                     ),
                     Gap.h8,

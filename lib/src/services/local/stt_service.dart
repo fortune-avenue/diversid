@@ -24,11 +24,16 @@ class SpeechToTextService {
     _sttState = SttState.notListening;
   }
 
+  void start() {
+    print('start');
+    if (!_speechEnabled) return;
+    _sttState = SttState.listening;
+  }
+
   Future<void> startListening(
       {required Function(String text) onResult,
       String localeId = 'id_ID'}) async {
-    if (!_speechEnabled) return;
-    _sttState = SttState.listening;
+    start();
     await _speechToText.listen(
       onResult: (result) {
         _lastWords = result.recognizedWords;
@@ -40,6 +45,7 @@ class SpeechToTextService {
 
   Future<void> stopListening() async {
     if (_sttState == SttState.notListening) return;
+    print('stop');
     await _speechToText.stop();
     _lastWords = '';
     _sttState = SttState.notListening;

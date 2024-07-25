@@ -39,6 +39,9 @@ enum Routes {
   inputEmail,
   emailVerification,
   resultEmailVerification,
+
+  // voice
+  inputVoice,
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -192,6 +195,12 @@ final goRouterProvider = Provider<GoRouter>(
                       const ResultEmailVerificationPage(),
                 ),
               ],
+            ),
+            GoRoute(
+              path: 'voice',
+              name: Routes.inputVoice.name,
+              builder: (context, state) => const InputVoicePage(),
+              routes: const [],
             ),
           ],
         )
