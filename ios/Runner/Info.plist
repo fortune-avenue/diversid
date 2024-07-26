@@ -51,5 +51,7 @@
 		<string>To record voice for biometric</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSCameraUsageDescription</key>
+		<string>The camera will be used for the app vision</string>
 	</dict>
 </plist>

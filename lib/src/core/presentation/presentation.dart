@@ -58,3 +58,7 @@ export 'otp/result_email_verification/result_email_verification_page.dart';
 //* VOICE
 /// input voice
 export 'voice/input_voice_page.dart';
+
+//* KTP
+/// ktp
+export 'ktp/ktp_page.dart';

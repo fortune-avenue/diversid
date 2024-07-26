@@ -97,7 +97,9 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                         title: "Verifikasi KTP",
                         svg: Assets.icons.ktpVerification,
                         status: MenuDashboardStatus.waiting,
-                        onTap: () {},
+                        onTap: () {
+                          context.goNamed(Routes.ktp.name);
+                        },
                       ),
                     ),
                     Gap.h8,

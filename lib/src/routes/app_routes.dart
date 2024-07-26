@@ -42,6 +42,9 @@ enum Routes {
 
   // voice
   inputVoice,
+
+  // ktp
+  ktp,
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -200,6 +203,12 @@ final goRouterProvider = Provider<GoRouter>(
               path: 'voice',
               name: Routes.inputVoice.name,
               builder: (context, state) => const InputVoicePage(),
+              routes: const [],
+            ),
+            GoRoute(
+              path: 'ktp',
+              name: Routes.ktp.name,
+              builder: (context, state) => const KTPPage(),
               routes: const [],
             ),
           ],

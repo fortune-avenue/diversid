@@ -28,7 +28,7 @@ class _InputVoicePageState extends ConsumerState<InputVoicePage> {
 
   List<String> validationTexts = [
     'Kuda Terbang',
-    'Kodok Lompat',
+    'Katak Lompat',
     'Kucing Cina',
     'Anjing Gila',
   ];
@@ -142,7 +142,7 @@ class _InputVoicePageState extends ConsumerState<InputVoicePage> {
                                         _debounceTimer?.cancel();
                                       }
                                       _debounceTimer = Timer(
-                                          const Duration(milliseconds: 500),
+                                          const Duration(milliseconds: 2000),
                                           () async {
                                         if (prevSpeech.toLowerCase() ==
                                             text.toLowerCase()) {
@@ -163,6 +163,8 @@ class _InputVoicePageState extends ConsumerState<InputVoicePage> {
                                             setState(() {});
                                             await ttsService.speak(
                                                 'Kata yang kamu ucapkan benar');
+                                            await ttsService.speak(
+                                                'Kata berikutnya adalah: ${validationTexts[index]}');
                                             ttsService.speak(
                                                 'Tekan Tombol Mikrofon untuk memulai');
                                           } else {
