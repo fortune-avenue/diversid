@@ -28,6 +28,8 @@
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used for the computer vision</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record voice for biometric</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
