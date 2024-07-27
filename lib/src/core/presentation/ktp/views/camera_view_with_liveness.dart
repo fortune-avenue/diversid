@@ -42,6 +42,7 @@ class CameraView2State extends State<CameraView2> with WidgetsBindingObserver {
       ResolutionPreset.high,
       enableAudio: false,
     );
+
     cameraController?.initialize().then((_) async {
       if (!mounted) {
         return;

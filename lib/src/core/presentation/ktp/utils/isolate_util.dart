@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:diversid/src/core/presentation/ktp/models/yolo_detection.dart';
@@ -14,7 +15,6 @@ class IsolateUtils {
   Isolate? _isolate;
   ReceivePort _receivePort = ReceivePort();
   SendPort? _sendPort;
-
   SendPort? get sendPort => _sendPort;
 
   Future<void> start() async {
@@ -35,12 +35,16 @@ class IsolateUtils {
       YOLODetection detection = YOLODetection(
           interpreter: Interpreter.fromAddress(isolateData.interpreterAddress),
           labels: isolateData.labels);
+
       imageLib.Image image =
           ImageUtils.convertCameraImage(isolateData.cameraImage);
+
       if (Platform.isAndroid) {
         image = imageLib.copyRotate(image, 90);
       }
+
       Map<String, dynamic> results = detection.predict(image);
+      detection.performFaceDetection(image, isolateData.token);
 
       isolateData.responsePort.send(results);
     }
@@ -53,11 +57,8 @@ class IsolateData {
   int interpreterAddress;
   List<String> labels;
   SendPort responsePort;
+  RootIsolateToken token;
 
-  IsolateData(
-    this.cameraImage,
-    this.interpreterAddress,
-    this.labels,
-    this.responsePort,
-  );
+  IsolateData(this.cameraImage, this.interpreterAddress, this.labels,
+      this.responsePort, this.token);
 }

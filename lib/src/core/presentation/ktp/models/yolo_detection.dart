@@ -2,6 +2,10 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
@@ -11,6 +15,7 @@ import 'detection.dart'; // Adjust import path as needed
 class YOLODetection {
   Interpreter? _interpreter;
   List<String>? _labels;
+  late FaceDetector _faceDetector;
 
   static const String MODEL_FILE_NAME = "yolo.tflite";
   static const String LABEL_FILE_NAME = "yolo.txt";
@@ -31,6 +36,18 @@ class YOLODetection {
   static const int NUM_RESULTS = 10;
 
   YOLODetection({Interpreter? interpreter, List<String>? labels}) {
+    final options = FaceDetectorOptions(
+      enableClassification: true,
+      enableContours: true,
+      enableLandmarks: true,
+      enableTracking: true,
+      performanceMode: FaceDetectorMode.accurate,
+    );
+
+    _faceDetector = FaceDetector(options: options);
+
+    print(_faceDetector.options);
+
     loadModel(interpreter: interpreter);
     loadLabels(labels: labels);
   }
@@ -47,6 +64,7 @@ class YOLODetection {
       var outputTensors = _interpreter!.getOutputTensors();
       _outputShapes = [];
       _outputTypes = [];
+
       for (var tensor in outputTensors) {
         _outputShapes!.add(tensor.shape);
         _outputTypes!.add(tensor.type);
@@ -59,8 +77,7 @@ class YOLODetection {
   /// Loads labels from assets
   Future<void> loadLabels({List<String>? labels}) async {
     try {
-      _labels =
-          labels ?? await FileUtil.loadLabels("assets/$LABEL_FILE_NAME");
+      _labels = labels ?? await FileUtil.loadLabels("assets/$LABEL_FILE_NAME");
     } catch (e) {
       print("Error while loading labels: $e");
     }
@@ -151,55 +168,68 @@ class YOLODetection {
     };
   }
 
-  /// Process output tensors to extract detections
-  // List<Detection> _processOutput(
-  //     List<List<List<double>>> output, int width, int height) {
-  //   // Transpose the output from [1, 6, 8400] to [1, 8400, 6]
-  //   List<List<List<double>>> transposedOutput = _transposeOutput(output);
+  Future<void> performFaceDetection(
+      imageLib.Image cameraImage, RootIsolateToken token) async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized(token);
+    final inputImage = _processImageToInputImage(cameraImage);
+    final List<Face> faces = await _faceDetector.processImage(inputImage);
+    if (faces.isNotEmpty) {
+      final face = faces[0];
+      FaceAngle angle = readAngle(face);
+      print('Face angle: $angle');
+    }
+  }
 
-  //   final int numPredictions = transposedOutput[0].length;
-  //   final int numClasses =
-  //       transposedOutput[0][0].length - 4; // Subtract 4 for x, y, w, h
+  InputImage _processImageToInputImage(imageLib.Image cameraImage) {
+    final bytes = cameraImage.getBytes();
+    final imageSize =
+        Size(cameraImage.width.toDouble(), cameraImage.height.toDouble());
+    const imageRotation = InputImageRotation.rotation0deg;
+    const inputImageFormat = InputImageFormat.bgra8888;
+    final bytesPerRow = cameraImage.width * 4; // Assuming BGRA format
 
-  //   List<Detection> detections = [];
+    final inputImageData = InputImageMetadata(
+      size: imageSize,
+      rotation: imageRotation,
+      format: inputImageFormat,
+      bytesPerRow: bytesPerRow,
+    );
 
-  //   for (int i = 0; i < numPredictions; i++) {
-  //     List<double> classScores = transposedOutput[0][i].sublist(4);
+    return InputImage.fromBytes(
+      bytes: bytes,
+      metadata: inputImageData,
+    );
+  }
 
-  //     double maxScore = classScores.reduce(max);
-  //     if (maxScore >= CONFIDENCE_THRESHOLD) {
-  //       int classIndex = classScores.indexOf(maxScore);
+  FaceAngle readAngle(Face face) {
+    // Get the head rotation angles
+    final double? headEulerAngleY =
+        face.headEulerAngleY; // Rotation around Y-axis (left/right)
+    final double? headEulerAngleX =
+        face.headEulerAngleX; // Rotation around X-axis (up/down)
 
-  //       // Calculate bounding box coordinates
-  //       double x = transposedOutput[0][i][0];
-  //       double y = transposedOutput[0][i][1];
-  //       double w = transposedOutput[0][i][2];
-  //       double h = transposedOutput[0][i][3];
+    // Define thresholds for angle detection
+    const double horizontalThreshold = 20.0;
+    const double verticalThreshold = 15.0;
 
-  //       // Convert from center coordinates to top-left coordinates
-  //       x = x - w / 2;
-  //       y = y - h / 2;
+    if (headEulerAngleY != null) {
+      if (headEulerAngleY > horizontalThreshold) {
+        return FaceAngle.right;
+      } else if (headEulerAngleY < -horizontalThreshold) {
+        return FaceAngle.left;
+      }
+    }
 
-  //       Rect boundingBox = Rect.fromLTWH(x, y, w, h);
-  //       detections.add(Detection(boundingBox, _labels![classIndex], maxScore));
-  //     }
-  //   }
+    if (headEulerAngleX != null) {
+      if (headEulerAngleX > verticalThreshold) {
+        return FaceAngle.lookUp;
+      } else if (headEulerAngleX < -verticalThreshold) {
+        return FaceAngle.lookDown;
+      }
+    }
 
-  //   // Perform Non-Maximum Suppression
-  //   List<Detection> nmsDetections =
-  //       _nonMaxSuppression(detections, IOU_THRESHOLD);
-
-  //   if (nmsDetections.isEmpty) return [];
-
-  //   for (var detection in nmsDetections) {
-  //     var newRect = imageProcessor!
-  //         .inverseTransformRect(detection.location, height, width);
-  //     detection.location = newRect;
-  //   }
-
-  //   print(nmsDetections);
-  //   return nmsDetections;
-  // }
+    return FaceAngle.center;
+  }
 
   List<Detection> _processOutput(
       List<List<List<double>>> output, int width, int height) {

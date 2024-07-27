@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:diversid/src/core/presentation/ktp/models/detection.dart';
@@ -118,11 +119,14 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       });
 
       // Data to be passed to inference isolate
+      var rootToken = RootIsolateToken.instance!;
+
       var isolateData = IsolateData(
         cameraImage,
         detection.interpreter!.address,
         detection.labels!,
         ReceivePort().sendPort, // Pass a new SendPort
+        rootToken,
       );
 
       // Perform inference in a separate isolate
