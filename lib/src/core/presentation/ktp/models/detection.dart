@@ -10,8 +10,8 @@ class Detection {
 
   Rect get renderLocation {
     // adding some constants to prevent offset
-    double ratioX = CameraViewSingleton.ratio + 0.025;
-    double ratioY = ratioX + 0.0;
+    double ratioX = CameraViewSingleton.ratio;
+    double ratioY = ratioX;
 
     double transLeft = max(0.1, location.left * ratioX);
     double transTop = max(0.1, location.top * ratioY);

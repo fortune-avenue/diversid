@@ -1,9 +1,7 @@
 import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/core/core.dart';
-import 'package:diversid/src/core/presentation/ktp/camera_page.dart';
-import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
-import 'package:diversid/src/core/presentation/ktp/views/liveness_view.dart';
+import 'package:diversid/src/routes/routes.dart';
 import 'package:diversid/src/shared/shared.dart';
 import 'package:diversid/src/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -88,13 +86,7 @@ class _KTPPageState extends ConsumerState<KTPPage> {
                                 svg: Assets.icons.ktpVerification,
                                 status: MenuDashboardStatus.verified,
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const KTPCaptureView(),
-                                    ),
-                                  );
+                                  context.goNamed(Routes.ktpCapture.name);
                                 },
                               ),
                             ),
@@ -107,12 +99,7 @@ class _KTPPageState extends ConsumerState<KTPPage> {
                                 svg: Assets.icons.ktpVerification,
                                 status: MenuDashboardStatus.waiting,
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SelfieView(),
-                                    ),
-                                  );
+                                  context.goNamed(Routes.selfieCapture.name);
                                 },
                               ),
                             ),
@@ -125,12 +112,7 @@ class _KTPPageState extends ConsumerState<KTPPage> {
                                 svg: Assets.icons.ktpVerification,
                                 status: MenuDashboardStatus.required,
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LivenessView(),
-                                    ),
-                                  );
+                                  context.goNamed(Routes.liveness.name);
                                 },
                               ),
                             ),
@@ -147,32 +129,6 @@ class _KTPPageState extends ConsumerState<KTPPage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class SelfieView extends StatelessWidget {
-  const SelfieView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CameraPage(
-      cameraType: CameraType.front,
-      classDetect: ClassDetect.all,
-      pageTitle: 'Selfie View',
-    );
-  }
-}
-
-class KTPCaptureView extends StatelessWidget {
-  const KTPCaptureView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CameraPage(
-      cameraType: CameraType.rear,
-      classDetect: ClassDetect.ktp,
-      pageTitle: 'KTP Capture View',
     );
   }
 }

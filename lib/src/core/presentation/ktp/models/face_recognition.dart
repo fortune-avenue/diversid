@@ -101,9 +101,9 @@ class FaceRecognition {
         return face.headEulerAngleY != null && face.headEulerAngleY! > 30;
       case LivenessCriteria.left:
         return face.headEulerAngleY != null && face.headEulerAngleY! < -30;
-      case LivenessCriteria.top:
-        return face.headEulerAngleX != null && face.headEulerAngleX! < -10;
       case LivenessCriteria.bottom:
+        return face.headEulerAngleX != null && face.headEulerAngleX! < -10;
+      case LivenessCriteria.top:
         return face.headEulerAngleX != null && face.headEulerAngleX! > 10;
       case LivenessCriteria.smile:
         return face.smilingProbability != null &&

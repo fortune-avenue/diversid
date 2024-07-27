@@ -58,12 +58,24 @@ class $AssetsImagesGen {
   /// File path: assets/images/elipse.png
   AssetGenImage get elipse => const AssetGenImage('assets/images/elipse.png');
 
+  /// File path: assets/images/ktp_overlay.png
+  AssetGenImage get ktpOverlay =>
+      const AssetGenImage('assets/images/ktp_overlay.png');
+
   /// File path: assets/images/line_pattern.png
   AssetGenImage get linePattern =>
       const AssetGenImage('assets/images/line_pattern.png');
 
+  /// File path: assets/images/selfie_overlay.png
+  AssetGenImage get selfieOverlay =>
+      const AssetGenImage('assets/images/selfie_overlay.png');
+
+  /// File path: assets/images/speaker.png
+  AssetGenImage get speaker => const AssetGenImage('assets/images/speaker.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [elipse, linePattern];
+  List<AssetGenImage> get values =>
+      [elipse, ktpOverlay, linePattern, selfieOverlay, speaker];
 }
 
 class $AssetsSvgsGen {
@@ -121,6 +133,14 @@ class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
+  static const String yoloTflite = 'assets/yolo.tflite';
+  static const String yoloTxt = 'assets/yolo.txt';
+  static const String yolo2Tflite = 'assets/yolo2.tflite';
+  static const String yolo2Txt = 'assets/yolo2.txt';
+
+  /// List of all assets
+  static List<String> get values =>
+      [yoloTflite, yoloTxt, yolo2Tflite, yolo2Txt];
 }
 
 class AssetGenImage {

@@ -1,4 +1,7 @@
 import 'package:diversid/src/core/core.dart';
+import 'package:diversid/src/core/presentation/ktp/ktp_capture_page.dart';
+import 'package:diversid/src/core/presentation/ktp/liveness_page.dart';
+import 'package:diversid/src/core/presentation/ktp/selfie_capture_page.dart';
 import 'package:diversid/src/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,6 +48,9 @@ enum Routes {
 
   // ktp
   ktp,
+  ktpCapture,
+  selfieCapture,
+  liveness,
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -209,7 +215,23 @@ final goRouterProvider = Provider<GoRouter>(
               path: 'ktp',
               name: Routes.ktp.name,
               builder: (context, state) => const KTPPage(),
-              routes: const [],
+              routes:  [
+                GoRoute(
+                  path: 'ktp-capture',
+                  name: Routes.ktpCapture.name,
+                  builder: (context, state) => const KTPCapturePage(),
+                ),
+                GoRoute(
+                  path: 'selfie-capture',
+                  name: Routes.selfieCapture.name,
+                  builder: (context, state) => const SelfiePage(),
+                ),
+                GoRoute(
+                  path: 'liveness',
+                  name: Routes.liveness.name,
+                  builder: (context, state) => const LivenessPage(),
+                ),
+              ],
             ),
           ],
         )

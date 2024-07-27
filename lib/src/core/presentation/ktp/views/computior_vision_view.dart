@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:diversid/src/core/presentation/ktp/models/detection.dart';
 import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
 import 'package:diversid/src/core/presentation/ktp/views/bounding_box_widget.dart';
@@ -7,14 +8,12 @@ import 'package:flutter/material.dart';
 import 'camera_view_with_yolo.dart';
 
 class ComputerVisionView extends StatefulWidget {
-  final CameraType cameraType;
-  final ClassDetect classDetect;
+  final KTPVerificationType ktpVerificationType;
 
-  ComputerVisionView({
-    required Key key,
-    required this.cameraType,
-    required this.classDetect,
-  }) : super(key: key);
+  const ComputerVisionView({
+    super.key,
+    required this.ktpVerificationType,
+  });
 
   @override
   ComputerVisionViewState createState() => ComputerVisionViewState();
@@ -23,10 +22,35 @@ class ComputerVisionView extends StatefulWidget {
 class ComputerVisionViewState extends State<ComputerVisionView> {
   List<Detection> detections = [];
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  GlobalKey<CameraViewState> _cameraViewKey = GlobalKey<CameraViewState>();
+  final GlobalKey<CameraViewState> _cameraViewKey =
+      GlobalKey<CameraViewState>();
 
   void captureImage() {
     _cameraViewKey.currentState?.captureImage();
+  }
+
+  //Get Camera Type
+  CameraType get cameraType {
+    switch (widget.ktpVerificationType) {
+      case KTPVerificationType.ktp:
+        return CameraType.rear;
+      case KTPVerificationType.selfie:
+        return CameraType.front;
+      case KTPVerificationType.liveness:
+        return CameraType.front;
+    }
+  }
+
+  // Get class detect
+  ClassDetect get classDetect {
+    switch (widget.ktpVerificationType) {
+      case KTPVerificationType.ktp:
+        return ClassDetect.ktp;
+      case KTPVerificationType.selfie:
+        return ClassDetect.all;
+      case KTPVerificationType.liveness:
+        return ClassDetect.all;
+    }
   }
 
   @override
@@ -39,31 +63,14 @@ class ComputerVisionViewState extends State<ComputerVisionView> {
           // Camera View
           CameraView(
             key: _cameraViewKey,
-            cameraType: widget.cameraType,
-            classDetect: widget.classDetect,
+            cameraType: cameraType,
+            classDetect: classDetect,
             resultsCallback: resultsCallback,
             captureCallback: captureCallback,
           ),
 
           // Bounding boxes
           boundingBoxes(detections),
-
-          // Heading
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: const EdgeInsets.only(top: 20, left: 10),
-              child: Text(
-                'Object Detection Flutter',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrangeAccent.withOpacity(0.6),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -92,7 +99,10 @@ class ComputerVisionViewState extends State<ComputerVisionView> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CaptureView(imagePath: imagePath),
+          builder: (context) => CaptureView(
+            ktpVerificationType: widget.ktpVerificationType,
+            imagePath: imagePath,
+          ),
         ),
       );
     }
