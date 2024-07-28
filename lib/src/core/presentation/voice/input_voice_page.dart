@@ -27,9 +27,10 @@ class _InputVoicePageState extends ConsumerState<InputVoicePage> {
   String prevSpeech = '';
 
   List<String> validationTexts = [
-    'Kuda Terbang',
     'Katak Lompat',
-    'Kucing Cina',
+    'Kucing Salam',
+    'Manusia Tenggelam',
+    'Kuda Terbang',
     'Anjing Gila',
   ];
 

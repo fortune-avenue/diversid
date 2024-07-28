@@ -16,7 +16,7 @@ class RegisterPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     HiveService hiveService = ref.read(hiveServiceProvider);
     hiveService.isFirstInstall = true;
-    
+
     return Scaffold(
       backgroundColor: ColorApp.scaffold,
       body: CustomScrollWidget(
@@ -85,7 +85,10 @@ class RegisterPage extends ConsumerWidget {
                               text: 'Masuk',
                               semanticsLabel: 'Tekan untuk Masuk',
                               onTap: () {
-                                context.goNamed(Routes.login.name);
+                                context.goNamed(
+                                  Routes.login.name,
+                                  pathParameters: {'fromDeeplink': 'none'},
+                                );
                               },
                             ),
                           ],

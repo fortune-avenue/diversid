@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
@@ -15,13 +16,29 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+  bool isFromDeeplink;
+
+  LoginPage({Key? key, required this.isFromDeeplink}) : super(key: key);
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+  @override
+  void initState() {
+    if (widget.isFromDeeplink) {
+      showCupertinoModalBottomSheet(
+        context: context,
+        closeProgressThreshold: 0.6,
+        builder: (BuildContext context) {
+          return const LoginWithVoiceSection();
+        },
+      );
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,15 +149,259 @@ class LoginWithVoiceSectionState extends ConsumerState<LoginWithVoiceSection> {
       ref.watch(speechToTextServiceProvider);
   TTSService get ttsService => ref.read(ttsServiceProvider);
   String prevSpeech = '';
+  late String validationText;
+
+  List<String> validationTexts = [
+    'Katak Lompat',
+    'Kucing Salam',
+    'Manusia Tenggelam',
+    'Kuda Terbang',
+    'Anjing Gila',
+    'Harimau Berdansa',
+    'Burung Menari',
+    'Singa Berbicara',
+    'Gajah Berlari',
+    'Serigala Bernyanyi',
+    'Panda Melompat',
+    'Beruang Menari',
+    'Buaya Tersenyum',
+    'Rubah Bermain',
+    'Kanguru Berjingkrak',
+    'Kelinci Melompat',
+    'Kuda Laut',
+    'Ikan Terbang',
+    'Domba Melompat',
+    'Kura-kura Cepat',
+    'Sapi Berlari',
+    'Babi Berbicara',
+    'Ayam Berkokok',
+    'Bebek Berdansa',
+    'Ular Bergoyang',
+    'Merak Berkibar',
+    'Jerapah Berputar',
+    'Badak Berlari',
+    'Kambing Melompat',
+    'Gagak Terbang',
+    'Elang Menyelam',
+    'Burung Hantu',
+    'Tupai Melompat',
+    'Tikus Bermain',
+    'Kupu-kupu Menari',
+    'Lebah Menggigit',
+    'Kumbang Berjalan',
+    'Semut Bekerja',
+    'Laba-laba Menjaring',
+    'Nyamuk Berdengung',
+    'Cicak Berlari',
+    'Kadal Berjemur',
+    'Katak Menyanyi',
+    'Bunglon Berubah',
+    'Kelelawar Bergantung',
+    'Burung Hantu',
+    'Gajah Berbicara',
+    'Singa Mengaum',
+    'Rusa Melompat',
+    'Zebra Berlari',
+    'Rubah Bersembunyi',
+    'Serigala Berburu',
+    'Beruang Bermain',
+    'Anak Kucing',
+    'Anak Anjing',
+    'Anak Ayam',
+    'Anak Kelinci',
+    'Anak Domba',
+    'Bayi Gajah',
+    'Anak Kuda',
+    'Anak Burung',
+    'Anak Bebek',
+    'Anak Ular',
+    'Anak Ikan',
+    'Anak Kura-kura',
+    'Anak Katak',
+    'Anak Cicak',
+    'Anak Kadal',
+    'Anak Bunglon',
+    'Anak Kelelawar',
+    'Anak Burung',
+    'Anak Gajah',
+    'Anak Singa',
+    'Anak Rusa',
+    'Anak Zebra',
+    'Anak Rubah',
+    'Anak Serigala',
+    'Anak Beruang',
+    'Ibu Kucing',
+    'Ibu Anjing',
+    'Ibu Ayam',
+    'Ibu Kelinci',
+    'Ibu Domba',
+    'Ibu Gajah',
+    'Ibu Kuda',
+    'Ibu Burung',
+    'Ibu Bebek',
+    'Ibu Ular',
+    'Ibu Ikan',
+    'Ibu Kura-kura',
+    'Ibu Katak',
+    'Ibu Cicak',
+    'Ibu Kadal',
+    'Ibu Bunglon',
+    'Ibu Kelelawar',
+    'Ibu Burung',
+    'Ibu Gajah',
+    'Ibu Singa',
+    'Ibu Rusa',
+    'Ibu Zebra',
+    'Ibu Rubah',
+    'Ibu Serigala',
+    'Ibu Beruang',
+    'Ayah Kucing',
+    'Ayah Anjing',
+    'Ayah Ayam',
+    'Ayah Kelinci',
+    'Ayah Domba',
+    'Ayah Gajah',
+    'Ayah Kuda',
+    'Ayah Burung',
+    'Ayah Bebek',
+    'Ayah Ular',
+    'Ayah Ikan',
+    'Ayah Kura-kura',
+    'Ayah Katak',
+    'Ayah Cicak',
+    'Ayah Kadal',
+    'Ayah Bunglon',
+    'Ayah Kelelawar',
+    'Ayah Burung',
+    'Ayah Gajah',
+    'Ayah Singa',
+    'Ayah Rusa',
+    'Ayah Zebra',
+    'Ayah Rubah',
+    'Ayah Serigala',
+    'Ayah Beruang',
+    'Guru Kucing',
+    'Guru Anjing',
+    'Guru Ayam',
+    'Guru Kelinci',
+    'Guru Domba',
+    'Guru Gajah',
+    'Guru Kuda',
+    'Guru Burung',
+    'Guru Bebek',
+    'Guru Ular',
+    'Guru Ikan',
+    'Guru Kura-kura',
+    'Guru Katak',
+    'Guru Cicak',
+    'Guru Kadal',
+    'Guru Bunglon',
+    'Guru Kelelawar',
+    'Guru Burung',
+    'Guru Gajah',
+    'Guru Singa',
+    'Guru Rusa',
+    'Guru Zebra',
+    'Guru Rubah',
+    'Guru Serigala',
+    'Guru Beruang',
+    'Dokter Kucing',
+    'Dokter Anjing',
+    'Dokter Ayam',
+    'Dokter Kelinci',
+    'Dokter Domba',
+    'Dokter Gajah',
+    'Dokter Kuda',
+    'Dokter Burung',
+    'Dokter Bebek',
+    'Dokter Ular',
+    'Dokter Ikan',
+    'Dokter Kura-kura',
+    'Dokter Katak',
+    'Kucing Cina',
+    'Dokter Cicak',
+    'Dokter Kadal',
+    'Dokter Bunglon',
+    'Dokter Kelelawar',
+    'Dokter Burung',
+    'Dokter Gajah',
+    'Dokter Singa',
+    'Dokter Rusa',
+    'Dokter Zebra',
+    'Dokter Rubah',
+    'Manusia Itik',
+    'Dokter Serigala',
+    'Dokter Beruang',
+    'Pilot Kucing',
+    'Pilot Anjing',
+    'Pilot Ayam',
+    'Pilot Kelinci',
+    'Pilot Domba',
+    'Pilot Gajah',
+    'Pilot Kuda',
+    'Pilot Burung',
+    'Pilot Bebek',
+    'Pilot Ular',
+    'Pilot Ikan',
+    'Pilot Kura-kura',
+    'Pilot Katak',
+    'Pilot Cicak',
+    'Pilot Kadal',
+    'Pilot Bunglon',
+    'Pilot Kelelawar',
+    'Pilot Burung',
+    'Pilot Gajah',
+    'Pilot Singa',
+    'Pilot Rusa',
+    'Pilot Zebra',
+    'Pilot Rubah',
+    'Pilot Serigala',
+    'Pilot Beruang',
+    'Penulis Kucing',
+    'Penulis Anjing',
+    'Penulis Ayam',
+    'Penulis Kelinci',
+    'Penulis Domba',
+    'Penulis Gajah',
+    'Penulis Kuda',
+    'Penulis Burung',
+    'Penulis Bebek',
+    'Penulis Ular',
+    'Penulis Ikan',
+    'Penulis Kura-kura',
+    'Penulis Katak',
+    'Penulis Cicak',
+    'Penulis Kadal',
+    'Penulis Bunglon',
+    'Penulis Kelelawar',
+    'Penulis Burung',
+    'Penulis Gajah',
+    'Penulis Singa',
+    'Penulis Rusa',
+    'Penulis Zebra',
+    'Penulis Rubah'
+  ];
 
   @override
   void initState() {
-    ttsService.speak('Sebutkan dengan lantang kata berikut ini: Kuda Terbang');
-    ttsService.speak('Tekan Tombol Mikrofon untuk memulai');
+    validationText = randomizeValidationText();
+    speakInit();
     super.initState();
   }
 
+  void speakInit() {
+    ttsService.speak('Sebutkan dengan lantang beberapa kata berikut ini');
+    ttsService.speak(validationText);
+    ttsService.speak('Tekan Tombol Mikrofon untuk memulai');
+  }
+
   Timer? _debounceTimer;
+
+  String randomizeValidationText() {
+    final random = Random();
+    int randomIndex = random.nextInt(validationTexts.length);
+    return validationTexts[randomIndex];
+  }
 
   @override
   void dispose() {
@@ -160,11 +421,14 @@ class LoginWithVoiceSectionState extends ConsumerState<LoginWithVoiceSection> {
       print(text);
       await speechService.stopListening();
       setState(() {});
-      if (text.toLowerCase().contains('kuda terbang'.toLowerCase())) {
+      if (text.toLowerCase().contains(validationText.toLowerCase())) {
         context.goNamed(Routes.dashboard.name);
       } else {
         await ttsService.speak('Kata yang kamu ucapkan salah');
-        ttsService.speak('Tekan Tombol Mikrofon untuk memulai');
+        setState(() {
+          validationText = randomizeValidationText();
+        });
+        speakInit();
       }
     });
   }
@@ -198,10 +462,10 @@ class LoginWithVoiceSectionState extends ConsumerState<LoginWithVoiceSection> {
                 Gap.h40,
                 GestureDetector(
                   onTap: () async {
-                    await ttsService.speak('Kuda Terbang');
+                    await ttsService.speak(validationText);
                   },
                   child: Text(
-                    'Kuda Terbang',
+                    validationText,
                     style: TypographyApp.headline3,
                     textAlign: TextAlign.center,
                   ),

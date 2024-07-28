@@ -110,10 +110,15 @@ final goRouterProvider = Provider<GoRouter>(
           builder: (context, state) => const RegisterPage(),
         ),
         GoRoute(
-          path: '/login',
-          name: Routes.login.name,
-          builder: (context, state) => const LoginPage(),
-        ),
+            path: '/login/:fromDeeplink',
+            name: Routes.login.name,
+            builder: (context, state) {
+              final isFromDeeplink =
+                  state.pathParameters['fromDeeplink'] == 'deeplink';
+              return LoginPage(
+                isFromDeeplink: isFromDeeplink,
+              );
+            }),
         GoRoute(
           path: '/dashboard',
           name: Routes.dashboard.name,
@@ -215,7 +220,7 @@ final goRouterProvider = Provider<GoRouter>(
               path: 'ktp',
               name: Routes.ktp.name,
               builder: (context, state) => const KTPPage(),
-              routes:  [
+              routes: [
                 GoRoute(
                   path: 'ktp-capture',
                   name: Routes.ktpCapture.name,

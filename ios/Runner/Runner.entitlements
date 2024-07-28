@@ -4,8 +4,8 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:netlabdte.com</string>
 		<string>webcredentials:netlabdte.com</string>
+		<string>applinks:netlabdte.com</string>
 	</array>
 </dict>
 </plist>
