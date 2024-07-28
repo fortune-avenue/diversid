@@ -13,13 +13,17 @@ class IsolateUtils {
   static const String DEBUG_NAME = "InferenceIsolate";
 
   Isolate? _isolate;
-  ReceivePort _receivePort = ReceivePort();
+  final ReceivePort _receivePort = ReceivePort();
   SendPort? _sendPort;
   SendPort? get sendPort => _sendPort;
 
-  Future<void> start() async {
+  Future<void> start({
+    bool isSelfie = true,
+  }) async {
     _isolate = await Isolate.spawn<SendPort>(
-      entryPoint,
+      (message) {
+        entryPoint(message, isSelfie);
+      },
       _receivePort.sendPort,
       debugName: DEBUG_NAME,
     );
@@ -27,14 +31,19 @@ class IsolateUtils {
     _sendPort = await _receivePort.first;
   }
 
-  static void entryPoint(SendPort sendPort) async {
+  static void entryPoint(
+    SendPort sendPort,
+    bool isSelfie,
+  ) async {
     final port = ReceivePort();
     sendPort.send(port.sendPort);
 
     await for (final IsolateData isolateData in port) {
       YOLODetection detection = YOLODetection(
-          interpreter: Interpreter.fromAddress(isolateData.interpreterAddress),
-          labels: isolateData.labels);
+        interpreter: Interpreter.fromAddress(isolateData.interpreterAddress),
+        labels: isolateData.labels,
+        isSelfie: isSelfie,
+      );
 
       imageLib.Image image =
           ImageUtils.convertCameraImage(isolateData.cameraImage);
@@ -44,7 +53,13 @@ class IsolateUtils {
       }
 
       Map<String, dynamic> results = detection.predict(image);
-      detection.performFaceDetection(image, isolateData.token);
+
+      if (isSelfie) {
+        results['faceAngle'] = await detection.performFaceDetection(
+          image,
+          isolateData.token,
+        );
+      }
 
       isolateData.responsePort.send(results);
     }

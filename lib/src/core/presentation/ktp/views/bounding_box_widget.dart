@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class BoundingBoxWidget extends StatelessWidget {
   final Detection result;
 
-  const BoundingBoxWidget({Key? key, required this.result}) : super(key: key);
+  const BoundingBoxWidget({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,8 @@ class BoundingBoxWidget extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(result.label, style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 4),
-                  Text(result.score.toStringAsFixed(2),
-                      style: TextStyle(color: Colors.white)),
+                  Text(result.label,
+                      style: const TextStyle(color: Colors.white)),
                 ],
               ),
             ),

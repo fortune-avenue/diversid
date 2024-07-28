@@ -1,16 +1,36 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
+import 'package:diversid/src/core/presentation/ktp/models/detection.dart';
+import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
 import 'package:diversid/src/core/presentation/ktp/models/face_recognition.dart';
 import 'package:diversid/src/core/presentation/ktp/views/camera_view_with_liveness.dart';
 import 'package:diversid/src/core/presentation/ktp/views/capture_view.dart';
 import 'package:diversid/src/core/presentation/ktp/views/computior_vision_view.dart';
+import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/services.dart';
 import 'package:diversid/src/shared/extensions/extensions.dart';
 import 'package:diversid/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-class CameraPage extends StatefulWidget {
+class Anchor {
+  final double left;
+  final double top;
+  final double width;
+  final double height;
+
+  Anchor(this.left, this.top, this.width, this.height);
+
+  double get right => left + width;
+  double get bottom => top + height;
+}
+
+class CameraPage extends ConsumerStatefulWidget {
   final KTPVerificationType ktpVerificationType;
 
   const CameraPage({
@@ -22,7 +42,7 @@ class CameraPage extends StatefulWidget {
   CameraPageState createState() => CameraPageState();
 }
 
-class CameraPageState extends State<CameraPage> {
+class CameraPageState extends ConsumerState<CameraPage> {
   FaceRecognition detections = FaceRecognition();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   final GlobalKey<CameraView2State> _cameraViewKey =
@@ -30,6 +50,12 @@ class CameraPageState extends State<CameraPage> {
 
   final GlobalKey<ComputerVisionViewState> _cvViewKey =
       GlobalKey<ComputerVisionViewState>();
+
+  String helperText = '';
+
+  LivenessCriteria? prevCriteria;
+  //ttsService
+  TTSService get ttsService => ref.read(ttsServiceProvider);
 
   // get title based on ktp verification type
   String get title {
@@ -68,12 +94,14 @@ class CameraPageState extends State<CameraPage> {
                     backgroundColor: Colors.black,
                     body: CameraView2(
                       key: _cameraViewKey,
-                      resultsCallback: resultsCallback,
+                      resultsCallback: livenessCallback,
                     ),
                   )
                 : ComputerVisionView(
                     key: _cvViewKey,
                     ktpVerificationType: widget.ktpVerificationType,
+                    resultsCallback: ktpCallback,
+                    onFaceAngleDetected: selfieCallback,
                   ),
           ),
           Positioned.fill(
@@ -104,8 +132,127 @@ class CameraPageState extends State<CameraPage> {
     );
   }
 
-  void resultsCallback(FaceRecognition detections) {
+  ktpCallback(List<Detection> detections) {
+    if (widget.ktpVerificationType != KTPVerificationType.ktp) return;
+    if (detections.isNotEmpty) {
+      final detection =
+          detections.firstWhereOrNull((element) => element.label == 'ktp');
+      if (detection == null) return;
+      if (detection.label == 'ktp') {
+        double area =
+            detection.renderLocation.width * detection.renderLocation.height;
+
+        // Define the center anchor
+        double anchorWidth = 318;
+        double anchorHeight = 200;
+        double anchorLeft = (context.screenWidth - anchorWidth) / 2;
+        double anchorTop = (context.screenHeight - anchorHeight) / 2;
+
+        Anchor anchor =
+            Anchor(anchorLeft, anchorTop, anchorWidth, anchorHeight);
+
+        // Compare bounding box with anchor
+        if (detection.renderLocation.left < anchor.left) {
+          helperText = 'KTP Terlalu Kiri';
+        } else if (detection.renderLocation.right > anchor.right) {
+          helperText = 'KTP Terlalu Kanan';
+        } else if (detection.renderLocation.top < anchor.top) {
+          helperText = 'KTP Terlalu Atas';
+        } else if (detection.renderLocation.bottom > anchor.bottom) {
+          helperText = 'KTP Terlalu Bawah';
+        } else if (area < 35000) {
+          helperText = 'KTP Terlalu Jauh';
+        } else if (area > 57000) {
+          helperText = 'KTP Terlalu Dekat';
+        } else {
+          helperText = 'KTP Sudah Pas';
+        }
+      }
+    } else {
+      helperText = 'KTP Tidak ada';
+    }
+    setState(() {
+      helperText = helperText;
+    });
+    // debounce time for tts
+    if (ttsService.isPlaying) return;
+    ttsService.speak(helperText);
+  }
+
+  selfieCallback(FaceAngle? angle) {
+    if (widget.ktpVerificationType != KTPVerificationType.selfie) return;
+    if (angle != null) {
+      switch (angle) {
+        case FaceAngle.right:
+          helperText = 'Wajah Terlalu Kanan';
+          break;
+        case FaceAngle.left:
+          helperText = 'Wajah Terlalu Kiri';
+          break;
+        case FaceAngle.center:
+          helperText = 'Wajah Sudah Pas';
+          break;
+        case FaceAngle.lookUp:
+          helperText = 'Wajah Terlalu Atas';
+          break;
+        case FaceAngle.lookDown:
+          helperText = 'Wajah Terlalu Bawah';
+          break;
+      }
+    } else {
+      helperText = 'Wajah Tidak Ditemukan';
+    }
+    setState(() {
+      helperText = helperText;
+    });
+    // debounce time for tts
+    if (ttsService.isPlaying) return;
+    ttsService.speak(helperText);
+  }
+
+  Future<void> livenessCallback(FaceRecognition detections) async {
+    if (widget.ktpVerificationType != KTPVerificationType.liveness) return;
     if (!mounted) return;
+    if (detections.isLive) {
+      setState(() {
+        helperText = 'Liveness Berhasil';
+      });
+      context.goNamed(Routes.ktp.name);
+      return;
+    }
+    final criteria = detections.checkingSequence[detections.completedChecks];
+    if (prevCriteria == criteria) {
+      return;
+    } else {
+      ttsService.stop();
+    }
+    prevCriteria = criteria;
+    switch (criteria) {
+      case LivenessCriteria.right:
+        helperText = 'Pindahkan Kepala ke Kanan';
+        break;
+      case LivenessCriteria.left:
+        helperText = 'Pindahkan Kepala ke Kiri';
+        break;
+      case LivenessCriteria.bottom:
+        helperText = 'Pindahkan Kepala ke Bawah';
+        break;
+      case LivenessCriteria.top:
+        helperText = 'Pindahkan Kepala ke Atas';
+        break;
+      case LivenessCriteria.smile:
+        helperText = 'Senyumkan Wajah';
+        break;
+      case LivenessCriteria.blink:
+        helperText = 'Tutup Mata';
+        break;
+      default:
+        helperText = '';
+    }
+    setState(() {
+      helperText = helperText;
+    });
+    ttsService.speak(helperText);
 
     setState(() {
       this.detections = detections;
@@ -169,7 +316,7 @@ class CameraPageState extends State<CameraPage> {
                     Gap.w16,
                     Expanded(
                       child: Text(
-                        'KTP Kurang Jelas, Harap Posisikan KTP di tengah Kamera',
+                        helperText,
                         style: TypographyApp.text1.bold,
                       ),
                     ),

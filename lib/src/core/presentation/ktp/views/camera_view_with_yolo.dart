@@ -1,18 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:diversid/src/core/presentation/ktp/models/detection.dart';
 import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
+import 'package:diversid/src/core/presentation/ktp/models/face_recognition.dart';
 import 'package:diversid/src/core/presentation/ktp/models/yolo_detection.dart';
 import 'package:diversid/src/core/presentation/ktp/utils/isolate_util.dart';
 import 'package:diversid/src/core/presentation/ktp/views/camera_view_singleton.dart';
+import 'package:diversid/src/core/presentation/ktp/views/capture_view.dart';
 import 'package:flutter/material.dart';
 
 /// [CameraView] sends each frame for inference
 class CameraView extends StatefulWidget {
   final CameraType cameraType;
   final ClassDetect classDetect;
+  final KTPVerificationType ktpVerificationType;
+  final Function(FaceAngle? angle) onFaceAngleDetected;
   final Function(String) captureCallback;
 
   /// Callback to pass results after inference to [HomeView]
@@ -20,12 +25,14 @@ class CameraView extends StatefulWidget {
 
   /// Constructor
   const CameraView({
-    required Key key,
+    super.key,
     required this.cameraType,
     required this.classDetect,
-    required this.resultsCallback,
+    required this.ktpVerificationType,
+    required this.onFaceAngleDetected,
     required this.captureCallback,
-  }) : super(key: key);
+    required this.resultsCallback,
+  });
 
   @override
   CameraViewState createState() => CameraViewState();
@@ -37,6 +44,7 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   bool predicting = false;
   late YOLODetection detection;
   late IsolateUtils isolateUtils;
+  FaceRecognition faceRecognition = FaceRecognition();
 
   @override
   void initState() {
@@ -49,7 +57,7 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
     // Spawn a new isolate
     isolateUtils = IsolateUtils();
-    await isolateUtils.start();
+    await isolateUtils.start(isSelfie: widget.classDetect == ClassDetect.all);
 
     // Camera initialization
     initializeCamera();
@@ -109,6 +117,19 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   /// Callback to receive each frame [CameraImage] perform inference on it
   void onLatestImageAvailable(CameraImage cameraImage) async {
+    // if (widget.ktpVerificationType == KTPVerificationType.selfie) {
+    //   if (!predicting) {
+    //     predicting = true;
+    //     await faceRecognition.performFaceAngle(
+    //       cameraImage,
+    //       widget.onFaceAngleDetected,
+    //     );
+    //     setState(() {
+    //       predicting = false;
+    //     });
+    //   }
+    //   return;
+    // }
     if (detection.interpreter != null && detection.labels != null) {
       // If previous inference has not completed then return
       if (predicting) {
@@ -137,6 +158,7 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       if (mounted) {
         widget.resultsCallback(
             inferenceResults["detections"] as List<Detection>? ?? []);
+        widget.onFaceAngleDetected(inferenceResults["faceAngle"] as FaceAngle?);
 
         setState(() {
           predicting = false;

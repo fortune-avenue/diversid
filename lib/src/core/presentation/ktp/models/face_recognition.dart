@@ -39,10 +39,57 @@ class FaceRecognition {
     final inputImage = _processImageToInputImage(cameraImage);
     final List<Face> faces = await _faceDetector.processImage(inputImage);
     if (faces.isNotEmpty) {
+      if (isLive) return;
       final face = faces[0];
       updateLivenessState(face);
-      print(this);
     }
+  }
+
+  Future<void> performFaceAngle(
+    CameraImage cameraImage,
+    Function(FaceAngle? face) onFaceAnglDetected,
+  ) async {
+    final inputImage = _processImageToInputImage(cameraImage);
+    final List<Face> faces = await _faceDetector.processImage(inputImage);
+    print(faces);
+    if (faces.isNotEmpty) {
+      final face = faces[0];
+      FaceAngle angle = readAngle(face);
+      print(angle);
+      onFaceAnglDetected(angle);
+    } else {
+      onFaceAnglDetected(null);
+    }
+  }
+
+  FaceAngle readAngle(Face face) {
+    // Get the head rotation angles
+    final double? headEulerAngleY =
+        face.headEulerAngleY; // Rotation around Y-axis (left/right)
+    final double? headEulerAngleX =
+        face.headEulerAngleX; // Rotation around X-axis (up/down)
+
+    // Define thresholds for angle detection
+    const double horizontalThreshold = 20.0;
+    const double verticalThreshold = 15.0;
+
+    if (headEulerAngleY != null) {
+      if (headEulerAngleY > horizontalThreshold) {
+        return FaceAngle.right;
+      } else if (headEulerAngleY < -horizontalThreshold) {
+        return FaceAngle.left;
+      }
+    }
+
+    if (headEulerAngleX != null) {
+      if (headEulerAngleX > verticalThreshold) {
+        return FaceAngle.lookUp;
+      } else if (headEulerAngleX < -verticalThreshold) {
+        return FaceAngle.lookDown;
+      }
+    }
+
+    return FaceAngle.center;
   }
 
   InputImage _processImageToInputImage(CameraImage cameraImage) {
@@ -83,13 +130,12 @@ class FaceRecognition {
     //   print(faceContour.type);
     // }
 
-    for (var criteria in checkingSequence) {
-      if (!livenessCheckingState[criteria]!) {
-        if (_checkCriteria(criteria, face)) {
-          livenessCheckingState[criteria] = true;
-          completedChecks++;
-          break;
-        }
+    final criteria = checkingSequence[completedChecks];
+
+    if (!livenessCheckingState[criteria]!) {
+      if (_checkCriteria(criteria, face)) {
+        livenessCheckingState[criteria] = true;
+        completedChecks += 1;
       }
     }
     checkLiveness();
@@ -148,9 +194,9 @@ class FaceRecognition {
 
   @override
   String toString() {
-    String _createSeparator(int length) => '-' * length;
+    String createSeparator(int length) => '-' * length;
     const lineWidth = 50;
-    final separator = _createSeparator(lineWidth);
+    final separator = createSeparator(lineWidth);
 
     String checkingSequenceStatus =
         checkingSequence.asMap().entries.map((entry) {

@@ -9,10 +9,14 @@ import 'camera_view_with_yolo.dart';
 
 class ComputerVisionView extends StatefulWidget {
   final KTPVerificationType ktpVerificationType;
+  final Function(List<Detection> detections) resultsCallback;
+  final Function(FaceAngle? angle) onFaceAngleDetected;
 
   const ComputerVisionView({
     super.key,
+    required this.resultsCallback,
     required this.ktpVerificationType,
+    required this.onFaceAngleDetected,
   });
 
   @override
@@ -65,8 +69,10 @@ class ComputerVisionViewState extends State<ComputerVisionView> {
             key: _cameraViewKey,
             cameraType: cameraType,
             classDetect: classDetect,
+            ktpVerificationType: widget.ktpVerificationType,
             resultsCallback: resultsCallback,
             captureCallback: captureCallback,
+            onFaceAngleDetected: widget.onFaceAngleDetected,
           ),
 
           // Bounding boxes
@@ -88,6 +94,8 @@ class ComputerVisionViewState extends State<ComputerVisionView> {
 
   void resultsCallback(List<Detection> detections) {
     if (!mounted) return;
+
+    widget.resultsCallback(detections);
 
     setState(() {
       this.detections = detections;

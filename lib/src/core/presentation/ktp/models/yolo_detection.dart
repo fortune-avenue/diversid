@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:diversid/src/core/presentation/ktp/models/enum_type.dart';
 import 'package:flutter/foundation.dart';
@@ -35,7 +34,14 @@ class YOLODetection {
   /// Number of results to show
   static const int NUM_RESULTS = 10;
 
-  YOLODetection({Interpreter? interpreter, List<String>? labels}) {
+  YOLODetection(
+      {Interpreter? interpreter, List<String>? labels, bool isSelfie = false}) {
+    loadModel(interpreter: interpreter);
+    loadLabels(labels: labels);
+    if (isSelfie) loadFaceDetector();
+  }
+
+  void loadFaceDetector() {
     final options = FaceDetectorOptions(
       enableClassification: true,
       enableContours: true,
@@ -43,13 +49,7 @@ class YOLODetection {
       enableTracking: true,
       performanceMode: FaceDetectorMode.accurate,
     );
-
     _faceDetector = FaceDetector(options: options);
-
-    print(_faceDetector.options);
-
-    loadModel(interpreter: interpreter);
-    loadLabels(labels: labels);
   }
 
   /// Loads interpreter from asset
@@ -168,7 +168,7 @@ class YOLODetection {
     };
   }
 
-  Future<void> performFaceDetection(
+  Future<FaceAngle?> performFaceDetection(
       imageLib.Image cameraImage, RootIsolateToken token) async {
     BackgroundIsolateBinaryMessenger.ensureInitialized(token);
     final inputImage = _processImageToInputImage(cameraImage);
@@ -176,8 +176,9 @@ class YOLODetection {
     if (faces.isNotEmpty) {
       final face = faces[0];
       FaceAngle angle = readAngle(face);
-      print('Face angle: $angle');
+      return angle;
     }
+    return null;
   }
 
   InputImage _processImageToInputImage(imageLib.Image cameraImage) {
