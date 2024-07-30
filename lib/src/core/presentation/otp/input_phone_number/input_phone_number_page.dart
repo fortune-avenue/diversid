@@ -1,15 +1,30 @@
 import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/routes/app_routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:diversid/src/shared/shared.dart';
 import 'package:diversid/src/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class InputPhoneNumberPage extends StatelessWidget {
+class InputPhoneNumberPage extends ConsumerStatefulWidget {
   const InputPhoneNumberPage({super.key});
+
+  @override
+  ConsumerState<InputPhoneNumberPage> createState() => _InputPhoneNumberPageState();
+}
+
+class _InputPhoneNumberPageState extends ConsumerState<InputPhoneNumberPage> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  @override
+  void initState() {
+    ttsService.speak('Halaman Verifikasi Nomor HP');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

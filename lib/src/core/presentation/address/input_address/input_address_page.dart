@@ -1,6 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/routes/app_routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:diversid/src/services/local/stt_service.dart';
 import 'package:diversid/src/shared/shared.dart';
 import 'package:diversid/src/widgets/widgets.dart';
@@ -21,6 +25,9 @@ class InputAddressPage extends ConsumerStatefulWidget {
 class _InputAddressPageState extends ConsumerState<InputAddressPage> {
   SpeechToTextService get speechService =>
       ref.watch(speechToTextServiceProvider);
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  Timer? _debounceTimer;
 
   Map<String, TextEditingController> textEditingControllers = {
     'address': TextEditingController(),
@@ -47,8 +54,16 @@ class _InputAddressPageState extends ConsumerState<InputAddressPage> {
   }
 
   @override
+  void initState() {
+    ttsService.speak('Halaman Verifikasi Alamat');
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    ttsService.stop();
     speechService.stopListening();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -208,27 +223,31 @@ class _InputAddressPageState extends ConsumerState<InputAddressPage> {
             text: speechService.isNotListening
                 ? 'Mulai Mode Suara'
                 : 'Selesaikan Mode Suara',
-            onTap: () async {
-              if (speechService.isListening) {
-                await speechService.stopListening();
-                setState(() {});
-              } else {
-                setState(() {});
-                speechService.startListening(
-                  onResult: (text) {
+            onTapDown: (details) {
+              setState(() {});
+              if (ttsService.isPlaying) ttsService.stop();
+              speechService.startListening(
+                onResult: (text) {
+                  _debounceTimer?.cancel();
+                  _debounceTimer = Timer(const Duration(seconds: 1), () {
                     TextEditingController? focusedController =
                         getFocusedTextEditingController();
                     if (focusedController != null) {
                       focusedController.text = text;
                       focusedController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: focusedController.text.length));
+                        TextPosition(offset: focusedController.text.length),
+                      );
+                      ttsService.speak(text);
                     }
-                    print(text);
-                  },
-                );
-              }
+                  });
+                },
+              );
             },
-          )
+            onTapUp: (details) async {
+              await speechService.stopListening();
+              setState(() {});
+            },
+          ),
         ],
       ),
     );
@@ -237,11 +256,15 @@ class _InputAddressPageState extends ConsumerState<InputAddressPage> {
 
 class KeyboardAwareButton extends StatelessWidget {
   final VoidCallback? onTap;
+  final Function(TapDownDetails details)? onTapDown;
+  final Function(TapUpDetails details)? onTapUp;
   final String text;
 
   const KeyboardAwareButton({
     super.key,
     this.onTap,
+    this.onTapDown,
+    this.onTapUp,
     required this.text,
   });
 
@@ -250,9 +273,10 @@ class KeyboardAwareButton extends StatelessWidget {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         if (!isKeyboardVisible) return const SizedBox.shrink();
-        return ButtonWidget.primary(
+        return ButtonWidget.hold(
           text: text,
-          onTap: onTap,
+          onTapUp: onTapUp,
+          onTapDown: onTapDown,
           isStickyButton: true,
         );
       },

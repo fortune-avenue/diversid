@@ -2,12 +2,27 @@ import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/constants/themes/themes.dart';
 import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class Onboarding2Page extends StatelessWidget {
+class Onboarding2Page extends ConsumerStatefulWidget {
   const Onboarding2Page({super.key});
+
+  @override
+  ConsumerState<Onboarding2Page> createState() => _Onboarding2PageState();
+}
+
+class _Onboarding2PageState extends ConsumerState<Onboarding2Page> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  @override
+  void initState() {
+    ttsService.speak('Instruksi Suara Real-time');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

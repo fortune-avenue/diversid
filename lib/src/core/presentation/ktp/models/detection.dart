@@ -1,6 +1,8 @@
 import 'dart:math';
+
 import 'package:diversid/src/core/presentation/ktp/views/camera_view_singleton.dart';
 import 'package:flutter/cupertino.dart';
+
 class Detection {
   Rect location;
   final String label;
@@ -24,6 +26,12 @@ class Detection {
         Rect.fromLTWH(transLeft, transTop, transWidth, transHeight);
 
     return transformedRect;
+  }
+
+  // How to detect if the Other Detection is Inside the Current Detection
+  bool isParentThan(Detection other) {
+    return location.contains(other.location.topLeft) &&
+        location.contains(other.location.bottomRight);
   }
 
   @override

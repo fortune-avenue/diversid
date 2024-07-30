@@ -52,6 +52,7 @@ class CameraPageState extends ConsumerState<CameraPage> {
       GlobalKey<ComputerVisionViewState>();
 
   String helperText = '';
+  String secondaryHelperText = '';
 
   LivenessCriteria? prevCriteria;
   //ttsService
@@ -153,13 +154,13 @@ class CameraPageState extends ConsumerState<CameraPage> {
 
         // Compare bounding box with anchor
         if (detection.renderLocation.left < anchor.left) {
-          helperText = 'KTP Terlalu Kiri';
+          helperText = 'KTP kurang kekanan';
         } else if (detection.renderLocation.right > anchor.right) {
-          helperText = 'KTP Terlalu Kanan';
+          helperText = 'KTP kurang kekiri';
         } else if (detection.renderLocation.top < anchor.top) {
-          helperText = 'KTP Terlalu Atas';
+          helperText = 'KTP kurang kebawah';
         } else if (detection.renderLocation.bottom > anchor.bottom) {
-          helperText = 'KTP Terlalu Bawah';
+          helperText = 'KTP kurang keatas';
         } else if (area < 35000) {
           helperText = 'KTP Terlalu Jauh';
         } else if (area > 57000) {
@@ -179,34 +180,60 @@ class CameraPageState extends ConsumerState<CameraPage> {
     ttsService.speak(helperText);
   }
 
-  selfieCallback(FaceAngle? angle) {
+  selfieCallback(FaceAngle? angle, List<Detection> detections) async {
     if (widget.ktpVerificationType != KTPVerificationType.selfie) return;
     if (angle != null) {
       switch (angle) {
         case FaceAngle.right:
-          helperText = 'Wajah Terlalu Kanan';
+          helperText = 'Tengok Sedikit Kiri';
           break;
         case FaceAngle.left:
-          helperText = 'Wajah Terlalu Kiri';
+          helperText = 'Tengok Sedikit Kanan';
           break;
         case FaceAngle.center:
           helperText = 'Wajah Sudah Pas';
           break;
         case FaceAngle.lookUp:
-          helperText = 'Wajah Terlalu Atas';
+          helperText = 'Tengok Sedikit Bawah';
           break;
         case FaceAngle.lookDown:
-          helperText = 'Wajah Terlalu Bawah';
+          helperText = 'Tengok Sedikit Atas';
           break;
       }
     } else {
       helperText = 'Wajah Tidak Ditemukan';
     }
+
+    if (detections.isNotEmpty) {
+      final detection =
+          detections.firstWhereOrNull((element) => element.label == 'ktp');
+      if (detection != null) {
+        if (detection.label == 'ktp') {
+          double area =
+              detection.renderLocation.width * detection.renderLocation.height;
+
+          if (area < 20000) {
+            secondaryHelperText = 'KTP Terlalu Jauh';
+          } else if (area > 57000) {
+            secondaryHelperText = 'KTP Terlalu Dekat';
+          } else {
+            secondaryHelperText = 'KTP Sudah Pas';
+          }
+        }
+      }
+    } else {
+      secondaryHelperText = 'KTP Tidak ada';
+    }
+
     setState(() {
+      secondaryHelperText = secondaryHelperText;
       helperText = helperText;
     });
-    // debounce time for tts
+
+    print(ttsService.isPlaying);
+
     if (ttsService.isPlaying) return;
+    ttsService.speak(secondaryHelperText);
     ttsService.speak(helperText);
   }
 

@@ -158,42 +158,68 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                     Gap.h8,
                     Expanded(
                       child: Center(
-                        child: Semantics(
-                          button: true,
-                          label: 'Tekan untuk memberikan Masukan',
-                          child: GestureDetector(
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const FlutterTTSPage(),
-                              //   ),
-                              // );
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const MyHomePage(),
-                              //   ),
-                              // );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RecorderPage(),
-                                ),
-                              );
-                            },
-                            child: ExcludeSemantics(
-                              child: SizedBox(
-                                height: SizeApp.h48,
-                                child: Center(
-                                  child: Text(
-                                    'Ada Masukan? Hubungi Kami',
-                                    style: TypographyApp.text1.bold.primary,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Semantics(
+                              button: true,
+                              label: 'Tekan untuk memberikan Masukan',
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const FlutterTTSPage(),
+                                  //   ),
+                                  // );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const MyHomePage(),
+                                  //   ),
+                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const RecorderPage(),
+                                    ),
+                                  );
+                                },
+                                child: ExcludeSemantics(
+                                  child: SizedBox(
+                                    height: SizeApp.h48,
+                                    child: Center(
+                                      child: Text(
+                                        'Ada Masukan? Hubungi Kami',
+                                        style: TypographyApp.text1.bold.primary,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                            Semantics(
+                              button: true,
+                              label: 'Keluar',
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.goNamed(Routes.login.name);
+                                },
+                                child: ExcludeSemantics(
+                                  child: SizedBox(
+                                    height: SizeApp.h48,
+                                    child: Center(
+                                      child: Text(
+                                        'Keluar',
+                                        style: TypographyApp.text1.bold.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            
+                          ],
                         ),
                       ),
                     ),
@@ -471,7 +497,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // If not yet listening for speech start, otherwise stop
             _speechToText.isNotListening ? _startListening : _stopListening,
         tooltip: 'Listen',
-        child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+        child: Icon(_speechToText.isNotListening ? Icons.mic : Icons.mic_off),
       ),
     );
   }

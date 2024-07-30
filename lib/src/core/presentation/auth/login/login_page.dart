@@ -16,17 +16,20 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
-  bool isFromDeeplink;
+  final bool isFromDeeplink;
 
-  LoginPage({Key? key, required this.isFromDeeplink}) : super(key: key);
+  const LoginPage({super.key, required this.isFromDeeplink});
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
   @override
   void initState() {
+    ttsService.speak('Halaman Masuk');
     if (widget.isFromDeeplink) {
       showCupertinoModalBottomSheet(
         context: context,
@@ -410,27 +413,24 @@ class LoginWithVoiceSectionState extends ConsumerState<LoginWithVoiceSection> {
     super.dispose();
   }
 
-  void _onSpeechResult(String text) {
-    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      if (prevSpeech.toLowerCase() == text.toLowerCase()) {
-        print('return');
-        return;
-      }
-      prevSpeech = text;
-      print(text);
-      await speechService.stopListening();
-      setState(() {});
-      if (text.toLowerCase().contains(validationText.toLowerCase())) {
-        context.goNamed(Routes.dashboard.name);
-      } else {
-        await ttsService.speak('Kata yang kamu ucapkan salah');
-        setState(() {
-          validationText = randomizeValidationText();
-        });
-        speakInit();
-      }
-    });
+  Future<void> _onSpeechResult(String text) async {
+    if (prevSpeech.toLowerCase() == text.toLowerCase()) {
+      print('return');
+      return;
+    }
+    prevSpeech = text;
+    print(text);
+    await speechService.stopListening();
+    setState(() {});
+    if (text.toLowerCase().contains(validationText.toLowerCase())) {
+      context.goNamed(Routes.dashboard.name);
+    } else {
+      ttsService.speak('Kata yang kamu ucapkan salah');
+      setState(() {
+        validationText = randomizeValidationText();
+      });
+      speakInit();
+    }
   }
 
   @override
@@ -473,26 +473,30 @@ class LoginWithVoiceSectionState extends ConsumerState<LoginWithVoiceSection> {
                 Gap.h40,
                 //Container with circle shape and inside of it there's icon microphone
                 GestureDetector(
-                  onTap: () async {
-                    if (speechService.isListening) {
-                      await speechService.stopListening();
-                      setState(() {});
-                    } else {
-                      setState(() {});
-                      ttsService.stop();
-                      speechService.startListening(
-                        onResult: _onSpeechResult,
-                      );
-                    }
+                  onTapDown: (details) {
+                    setState(() {});
+                    if (ttsService.isPlaying) ttsService.stop();
+                    speechService.startListening(
+                      onResult: (text) {
+                        _debounceTimer?.cancel();
+                        _debounceTimer = Timer(const Duration(seconds: 1), () {
+                          _onSpeechResult(text);
+                        });
+                      },
+                    );
+                  },
+                  onTapUp: (details) async {
+                    await speechService.stopListening();
+                    setState(() {});
                   },
                   child: Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: ColorApp.primary,
                     ),
-                    padding: EdgeInsets.all(16.r),
+                    padding: EdgeInsets.all(32.r),
                     child: Icon(
-                      speechService.isListening ? Icons.mic_off : Icons.mic,
+                      speechService.isListening ? Icons.mic : Icons.mic_off,
                       color: ColorApp.white,
                       size: 32.r,
                     ),

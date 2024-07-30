@@ -25,6 +25,12 @@ class _Onboarding1PageState extends ConsumerState<Onboarding1Page> {
   }
 
   @override
+  void dispose() {
+    ttsService.pause();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorApp.scaffold,

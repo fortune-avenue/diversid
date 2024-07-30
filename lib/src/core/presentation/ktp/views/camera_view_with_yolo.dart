@@ -17,7 +17,8 @@ class CameraView extends StatefulWidget {
   final CameraType cameraType;
   final ClassDetect classDetect;
   final KTPVerificationType ktpVerificationType;
-  final Function(FaceAngle? angle) onFaceAngleDetected;
+  final Function(FaceAngle? angle, List<Detection> detections)
+      onFaceAngleDetected;
   final Function(String) captureCallback;
 
   /// Callback to pass results after inference to [HomeView]
@@ -158,7 +159,10 @@ class CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       if (mounted) {
         widget.resultsCallback(
             inferenceResults["detections"] as List<Detection>? ?? []);
-        widget.onFaceAngleDetected(inferenceResults["faceAngle"] as FaceAngle?);
+        widget.onFaceAngleDetected(
+          inferenceResults["faceAngle"] as FaceAngle?,
+          inferenceResults["detections"] as List<Detection>? ?? [],
+        );
 
         setState(() {
           predicting = false;

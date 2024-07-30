@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:signature/signature.dart';
+import 'package:signature/signature.dart';
 
 class InputSignaturePage extends StatefulWidget {
   const InputSignaturePage({super.key});
@@ -17,18 +17,18 @@ class InputSignaturePage extends StatefulWidget {
 }
 
 class _InputSignaturePageState extends State<InputSignaturePage> {
-  // final SignatureController _controller = SignatureController(
-  //   penStrokeWidth: 3,
-  //   penColor: ColorApp.primary,
-  //   exportBackgroundColor: Colors.white,
-  //   exportPenColor: Colors.black,
-  // );
+  final SignatureController _controller = SignatureController(
+    penStrokeWidth: 3,
+    penColor: ColorApp.primary,
+    exportBackgroundColor: Colors.white,
+    exportPenColor: Colors.black,
+  );
 
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +89,15 @@ class _InputSignaturePageState extends State<InputSignaturePage> {
                           ),
                           child: Stack(
                             children: [
-                              // Positioned.fill(
-                              //   child: ClipRRect(
-                              //     borderRadius: BorderRadius.circular(16.r),
-                              //     child: Signature(
-                              //       controller: _controller,
-                              //       backgroundColor: Colors.white,
-                              //     ),
-                              //   ),
-                              // ),
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  child: Signature(
+                                    controller: _controller,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                              ),
                               Positioned(
                                 right: 16,
                                 top: 16,

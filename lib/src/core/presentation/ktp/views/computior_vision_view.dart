@@ -10,7 +10,10 @@ import 'camera_view_with_yolo.dart';
 class ComputerVisionView extends StatefulWidget {
   final KTPVerificationType ktpVerificationType;
   final Function(List<Detection> detections) resultsCallback;
-  final Function(FaceAngle? angle) onFaceAngleDetected;
+  final Function(
+    FaceAngle? angle,
+    List<Detection> detections,
+  ) onFaceAngleDetected;
 
   const ComputerVisionView({
     super.key,

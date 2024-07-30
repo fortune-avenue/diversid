@@ -16,6 +16,8 @@ class ButtonWidget extends StatelessWidget {
   final double? width;
   final String text;
   final Function()? onTap;
+  final Function(TapDownDetails details)? onTapDown;
+  final Function(TapUpDetails details)? onTapUp;
   final bool isLoading;
   final Widget? prefix;
   final Widget? sufix;
@@ -39,7 +41,9 @@ class ButtonWidget extends StatelessWidget {
     this.semanticsLabel,
     bool? isEnabled,
     this.isStickyButton = false,
-  }) : _isEnabled = isEnabled ?? onTap != null;
+  })  : _isEnabled = isEnabled ?? onTap != null,
+        onTapDown = null,
+        onTapUp = null;
 
   const ButtonWidget.primary({
     this.width,
@@ -54,8 +58,28 @@ class ButtonWidget extends StatelessWidget {
     this.isStickyButton = false,
   })  : buttonType = ButtonType.primary,
         color = ColorApp.primary,
+        onTapDown = null,
+        onTapUp = null,
         focusColor = ColorApp.secondary,
         _isEnabled = isEnabled ?? onTap != null;
+
+  const ButtonWidget.hold({
+    this.width,
+    super.key,
+    this.onTapDown,
+    this.onTapUp,
+    this.isLoading = false,
+    required this.text,
+    this.prefix,
+    this.sufix,
+    this.semanticsLabel,
+    bool? isEnabled,
+    this.isStickyButton = false,
+  })  : buttonType = ButtonType.primary,
+        color = ColorApp.primary,
+        focusColor = ColorApp.secondary,
+        onTap = null,
+        _isEnabled = isEnabled ?? onTapDown != null && onTapUp != null;
 
   ButtonWidget.outlined({
     this.width,
@@ -70,6 +94,8 @@ class ButtonWidget extends StatelessWidget {
     this.isStickyButton = false,
   })  : buttonType = ButtonType.outlined,
         color = ColorApp.white,
+        onTapDown = null,
+        onTapUp = null,
         focusColor = ColorApp.primary.withOpacity(0.2),
         _isEnabled = isEnabled ?? onTap != null;
 
@@ -86,6 +112,8 @@ class ButtonWidget extends StatelessWidget {
     bool? isEnabled,
   })  : buttonType = ButtonType.secondary,
         color = ColorApp.grey,
+        onTapDown = null,
+        onTapUp = null,
         focusColor = ColorApp.grey.withOpacity(0.2),
         _isEnabled = isEnabled ?? onTap != null;
 
@@ -115,6 +143,12 @@ class ButtonWidget extends StatelessWidget {
           ),
           child: InkWell(
             onTap: _isEnabled && !isLoading ? onTap : null,
+            onTapDown: _isEnabled && !isLoading
+                ? (details) => onTapDown?.call(details)
+                : null,
+            onTapUp: _isEnabled && !isLoading
+                ? (details) => onTapUp?.call(details)
+                : null,
             customBorder: RoundedRectangleBorder(
               borderRadius: isStickyButton
                   ? BorderRadius.vertical(

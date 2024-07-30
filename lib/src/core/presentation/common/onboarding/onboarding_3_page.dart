@@ -2,12 +2,27 @@ import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/constants/themes/themes.dart';
 import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class Onboarding3Page extends StatelessWidget {
+class Onboarding3Page extends ConsumerStatefulWidget {
   const Onboarding3Page({super.key});
+
+  @override
+  ConsumerState<Onboarding3Page> createState() => _Onboarding3PageState();
+}
+
+class _Onboarding3PageState extends ConsumerState<Onboarding3Page> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  @override
+  void initState() {
+    ttsService.speak('E-KYC Untuk Semua');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +44,10 @@ class Onboarding3Page extends StatelessWidget {
                   ),
                   const Spacer(flex: 1),
                   GestureDetector(
-                    onTap: () => context.goNamed(Routes.register.name),
+                    onTap: () {
+                      ttsService.stop();
+                      context.goNamed(Routes.register.name);
+                    },
                     child: SizedBox(
                       height: SizeApp.h48,
                       child: Center(
@@ -69,7 +87,10 @@ class Onboarding3Page extends StatelessWidget {
                 button: true,
                 label: 'Lanjut',
                 child: GestureDetector(
-                  onTap: () => context.goNamed(Routes.onboarding4.name),
+                  onTap: () {
+                    ttsService.stop();
+                    context.goNamed(Routes.onboarding4.name);
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100.r),

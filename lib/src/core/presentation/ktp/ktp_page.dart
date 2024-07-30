@@ -2,6 +2,7 @@ import 'package:diversid/gen/assets.gen.dart';
 import 'package:diversid/src/constants/constants.dart';
 import 'package:diversid/src/core/core.dart';
 import 'package:diversid/src/routes/routes.dart';
+import 'package:diversid/src/services/local/local.dart';
 import 'package:diversid/src/shared/shared.dart';
 import 'package:diversid/src/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,14 @@ class KTPPage extends ConsumerStatefulWidget {
 }
 
 class _KTPPageState extends ConsumerState<KTPPage> {
+  TTSService get ttsService => ref.read(ttsServiceProvider);
+
+  @override
+  void initState() {
+    ttsService.speak('Halaman Verifikasi KTP');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
