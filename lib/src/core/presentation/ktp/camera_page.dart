@@ -83,6 +83,12 @@ class CameraPageState extends ConsumerState<CameraPage> {
   }
 
   @override
+  void dispose() {
+    ttsService.stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -355,6 +361,7 @@ class CameraPageState extends ConsumerState<CameraPage> {
             if (widget.ktpVerificationType != KTPVerificationType.liveness) ...[
               GestureDetector(
                 onTap: () {
+                  ttsService.stop();
                   _cvViewKey.currentState?.captureImage();
                 },
                 child: Container(

@@ -221,8 +221,8 @@ class _InputAddressPageState extends ConsumerState<InputAddressPage> {
           ),
           KeyboardAwareButton(
             text: speechService.isNotListening
-                ? 'Mulai Mode Suara'
-                : 'Selesaikan Mode Suara',
+                ? 'Tekan untuk Mode Suara'
+                : 'Mendengarkan...',
             onTapDown: (details) {
               setState(() {});
               if (ttsService.isPlaying) ttsService.stop();

@@ -26,6 +26,7 @@ class InputFormWidget extends StatelessWidget {
   final Widget? suffix;
   final int? maxLines;
   final String? title;
+  final TextInputType? keyboardType;
   final FocusNode? focusNode;
 
   const InputFormWidget({
@@ -40,6 +41,7 @@ class InputFormWidget extends StatelessWidget {
     this.maxLines = 1,
     this.title,
     this.focusNode,
+    this.keyboardType = TextInputType.text,
   })  : inputFormType = InputFormType.normal,
         isObscure = false,
         readOnly = false,
@@ -56,6 +58,7 @@ class InputFormWidget extends StatelessWidget {
     this.suffix,
     this.title,
     this.focusNode,
+    this.keyboardType = TextInputType.phone,
   })  : inputFormType = InputFormType.phoneNumber,
         isObscure = false,
         readOnly = false,
@@ -91,6 +94,7 @@ class InputFormWidget extends StatelessWidget {
     this.maxLines = 1,
     this.title,
     this.focusNode,
+    this.keyboardType,
   })  : inputFormType = InputFormType.button,
         isObscure = false,
         readOnly = true,
@@ -111,6 +115,7 @@ class InputFormWidget extends StatelessWidget {
     this.maxLines = 1,
     this.title,
     this.focusNode,
+    this.keyboardType = TextInputType.visiblePassword,
   })  : inputFormType = InputFormType.password,
         readOnly = false,
         onTap = null;
@@ -142,6 +147,7 @@ class InputFormWidget extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validator,
             maxLines: maxLines,
+            keyboardType: keyboardType,
             cursorColor: ColorApp.primary,
             decoration: InputDecoration(
               filled: true,

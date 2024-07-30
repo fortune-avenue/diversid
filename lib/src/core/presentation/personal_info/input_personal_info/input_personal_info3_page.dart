@@ -88,11 +88,13 @@ class InputPersonalInfo3Page extends StatelessWidget {
                             Gap.h16,
                             InputFormWidget(
                               controller: TextEditingController(),
+                              keyboardType: TextInputType.emailAddress,
                               hintText: 'Kontak Darurat - Alamat Email',
                             ),
                             Gap.h16,
                             InputFormWidget(
                               controller: TextEditingController(),
+                              keyboardType: TextInputType.number,
                               hintText: 'Kontak Darurat - Nomor HP',
                             ),
                             Gap.h24,

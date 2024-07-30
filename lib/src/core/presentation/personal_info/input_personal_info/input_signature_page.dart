@@ -102,7 +102,7 @@ class _InputSignaturePageState extends State<InputSignaturePage> {
                                 right: 16,
                                 top: 16,
                                 child: GestureDetector(
-                                  // onTap: () => _controller.clear(),
+                                  onTap: () => _controller.clear(),
                                   child: SizedBox(
                                     height: SizeApp.h48,
                                     width: SizeApp.h48,

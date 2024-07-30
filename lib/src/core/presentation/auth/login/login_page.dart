@@ -89,6 +89,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             Gap.h16,
                             InputFormWidget(
                               controller: TextEditingController(),
+                              keyboardType: TextInputType.emailAddress,
                               hintText: 'Email',
                             ),
                             Gap.h16,

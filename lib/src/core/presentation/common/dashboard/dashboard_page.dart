@@ -178,12 +178,12 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                   //     builder: (context) => const MyHomePage(),
                                   //   ),
                                   // );
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const RecorderPage(),
-                                    ),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const RecorderPage(),
+                                  //   ),
+                                  // );
                                 },
                                 child: ExcludeSemantics(
                                   child: SizedBox(

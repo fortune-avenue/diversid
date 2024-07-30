@@ -151,12 +151,14 @@ class _InputPersonalInfo1PageState
                                   InputFormWidget(
                                     controller: textEditingControllers['nik']!,
                                     focusNode: focusNodes['nik']!,
+                                    keyboardType: TextInputType.number,
                                     hintText: 'NIK',
                                   ),
                                   Gap.h16,
                                   InputFormWidget(
                                     controller: textEditingControllers['npwp']!,
                                     focusNode: focusNodes['npwp']!,
+                                    keyboardType: TextInputType.number,
                                     hintText: 'NPWP',
                                   ),
                                   Gap.h16,

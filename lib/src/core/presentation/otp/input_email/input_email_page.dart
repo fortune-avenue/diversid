@@ -99,6 +99,7 @@ class _InputEmailPageState extends ConsumerState<InputEmailPage> {
                             Gap.h24,
                             InputFormWidget(
                               controller: TextEditingController(),
+                              keyboardType: TextInputType.emailAddress,
                               hintText: 'Email',
                             ),
                             Gap.h24,
