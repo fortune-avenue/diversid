@@ -204,7 +204,7 @@ class _InputPersonalInfo1PageState
           ),
           KeyboardAwareButton(
             text: speechService.isNotListening
-                ? 'Mulai Mode Suara'
+                ? 'Tekan untuk Mulai Mode Suara'
                 : 'Selesaikan Mode Suara',
             onTapDown: (details) {
               setState(() {});
